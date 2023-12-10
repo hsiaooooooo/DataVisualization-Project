@@ -8,9 +8,39 @@
 </head>
 
 <body>
-    <div id="chart-area"></div>
+    <style>
+        .d3-tip {
+            line-height: 1;
+            padding: 6px;
+            background: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        .chart {
+            display: inline-block;
+            margin-right: 10px;
+            margin-left: 10px;
+            margin-bottom: 10px;
+            margin-top: 10px;
+            width: 48vw;
+        }
+
+        
+    </style>
+
+    <div id="chart-area1" class="chart"></div>
+    <div id="chart-area2" class="chart"></div>
+    <div id="second-row-container">
+        <div id="chart-area3" class="chart"></div>
+    </div>
+
 
     <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="d3-tip.js"></script>
+
+    <script src="game.js"></script>
     <script src="main.js"></script>
 
 </body>
