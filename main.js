@@ -15,6 +15,7 @@ var data = d3.csv("vgsales.csv");
 
 getData(data);
 gamePieChart(data);
+gameBarChart(data);
 
 function getData(data) {
     data.then(d =>
