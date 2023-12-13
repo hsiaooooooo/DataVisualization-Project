@@ -31,7 +31,7 @@ function gamePieChart(data) {
             sales[3] += d.Other_Sales;
         });
 
-        console.log(sales);
+        //console.log(sales);
 
         var color = d3.scaleOrdinal()
             .domain(sales_categories)
@@ -82,7 +82,7 @@ function gameBarChart(data) {
             { region: "Other", sales: sales[3] },
             { region: "Global", sales: sales[4] }
         ]
-        console.log(bar);
+        //console.log(bar);
 
         var x = d3.scaleBand()
             .domain(sales_categories)

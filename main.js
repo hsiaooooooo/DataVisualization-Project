@@ -2,6 +2,7 @@
 
 var data = d3.csv("vgsales.csv");
 
+
 // Create an SVG element for the second chart
 // const svg2 = d3.select("#chart-area2")
 //     .append("svg")
@@ -14,8 +15,14 @@ var data = d3.csv("vgsales.csv");
 //     .attr("height", game_height);
 
 getData(data);
-gamePieChart(data);
-gameBarChart(data);
+//gamePieChart(data);
+//gameBarChart(data);
+
+//processGenre(data);
+//console.log(keys);
+// const title = Object.keys(GenreCounts);
+// console.log(title);
+//sec_donut(data);
 
 function getData(data) {
     data.then(d =>
