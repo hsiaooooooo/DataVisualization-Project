@@ -1,6 +1,8 @@
 
 
 var data = d3.csv("vgsales.csv");
+let game;
+
 
 // Create an SVG element for the second chart
 // const svg2 = d3.select("#chart-area2")
@@ -14,8 +16,10 @@ var data = d3.csv("vgsales.csv");
 //     .attr("height", game_height);
 
 getData(data);
+
 gamePieChart(data);
 gameBarChart(data);
+gameBubbleChart(data);
 
 function getData(data) {
     data.then(d =>
