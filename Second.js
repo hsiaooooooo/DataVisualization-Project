@@ -26,15 +26,24 @@ function sec_pie(data)
 }
 
 var GenreCounts = {};
-var keys;
+var Genrekeys;
 var SalesCounts=[0, 0, 0, 0];
+var PublisherCounts = {};
+var Publisherkeys;
+var PlatformCounts = {};
+var PlatformKeys;
+const top5Publisher=[];
+const top5Platform=[];
 
 d3.csv("vgsales.csv").then(data =>{
     preprocess(data);
     processPie(data);//console.log(SalesCounts);
-    processGenre(data);//console.log(GenreCounts)
-    keys = Object.keys(GenreCounts);//console.log(keys);
-    sec_donut(data, keys);
+    processData(data);//console.log(GenreCounts)
+    Genrekeys = Object.keys(GenreCounts);//console.log(keys);
+    //console.log(PublisherCounts);
+    Publisherkeys = Object.keys(PublisherCounts);//console.log(Publisherkeys);
+    PlatformKeys = Object.keys(PlatformCounts);//console.log(PlatformKeys);
+    sec_donut(data, Genrekeys);
     sec_pie(data);
 
 
@@ -55,7 +64,7 @@ function preprocess(data) {
     //console.log(data)
 }
 
-function processGenre(data){
+function processData(data){
     data.forEach(function(item){
         if(GenreCounts.hasOwnProperty(item.Genre))
         {
@@ -63,6 +72,36 @@ function processGenre(data){
         }
         else{
             GenreCounts[item.Genre]=1;
+        }
+
+        if(PublisherCounts.hasOwnProperty(item.Publisher))
+        {
+            PublisherCounts[item.Publisher]+=item.NA_Sales;
+            PublisherCounts[item.Publisher]+=item.EU_Sales;
+            PublisherCounts[item.Publisher]+=item.JP_Sales;
+            PublisherCounts[item.Publisher]+=item.Other_Sales;
+        }
+        else{
+            PublisherCounts[item.Publisher]=0;
+            PublisherCounts[item.Publisher]+=item.NA_Sales;
+            PublisherCounts[item.Publisher]+=item.EU_Sales;
+            PublisherCounts[item.Publisher]+=item.JP_Sales;
+            PublisherCounts[item.Publisher]+=item.Other_Sales;
+        }
+
+        if(PlatformCounts.hasOwnProperty(item.Platform))
+        {
+            PlatformCounts[item.Platform]+=item.NA_Sales;
+            PlatformCounts[item.Platform]+=item.EU_Sales;
+            PlatformCounts[item.Platform]+=item.JP_Sales;
+            PlatformCounts[item.Platform]+=item.Other_Sales;
+        }
+        else{
+            PlatformCounts[item.Platform]=0;
+            PlatformCounts[item.Platform]+=item.NA_Sales;
+            PlatformCounts[item.Platform]+=item.EU_Sales;
+            PlatformCounts[item.Platform]+=item.JP_Sales;
+            PlatformCounts[item.Platform]+=item.Other_Sales;
         }
     })
 }
@@ -142,6 +181,9 @@ function sec_donut(data, keys)
 
 
 }
+
+
+
 function sec_bar(data)
 {
 
@@ -150,7 +192,8 @@ function sec_bar(data)
 function sec_pie(data)
 {
     const group2 = svg2.append('g')
-    var pie_color = ["#4090dc", "#a3c5dc", "#5cc4c9", "#409079"]
+    //var pie_color = ["#4090dc", "#a3c5dc", "#5cc4c9", "#409079"]
+    var pie_color = ['#d89079', '#409079', '#4090dc', '#d8b3ca']
     var pie_name=['NA', 'EU', 'JP', 'Other']
     
     //pie legend
