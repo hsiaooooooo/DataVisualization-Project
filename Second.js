@@ -45,6 +45,8 @@ d3.csv("vgsales.csv").then(data =>{
     PlatformKeys = Object.keys(PlatformCounts);//console.log(PlatformKeys);
     sec_donut(data, Genrekeys);
     sec_pie(data);
+    top5(top5Publisher, PublisherCounts, Publisherkeys);console.log(top5Publisher);
+    top5(top5Platform, PlatformCounts, PlatformKeys);console.log(top5Platform);
 
 
     //console.log(data);
@@ -117,6 +119,22 @@ function processPie(data)
     })
 }
 
+function top5(top5array, data, keys)
+{
+    top5array.length = 0; 
+    
+    var dataArray = Object.keys(data).map(function(key) {
+        return {
+            name: key,
+            value: data[key]
+        };
+    });
+
+    dataArray.sort(function(a, b) {
+        return b.value - a.value;
+    });
+    top5array.push.apply(top5array, dataArray.slice(0, 5));
+}
 
 
 function sec_donut(data, keys)
@@ -193,7 +211,7 @@ function sec_pie(data)
 {
     const group2 = svg2.append('g')
     //var pie_color = ["#4090dc", "#a3c5dc", "#5cc4c9", "#409079"]
-    var pie_color = ['#d89079', '#409079', '#4090dc', '#d8b3ca']
+    var pie_color = ['#d89079', '#5cc4c9', '#4090dc', '#d8b3ca']
     var pie_name=['NA', 'EU', 'JP', 'Other']
     
     //pie legend
