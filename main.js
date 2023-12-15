@@ -1,19 +1,5 @@
-
-
 var data = d3.csv("vgsales.csv");
 let game;
-
-
-// Create an SVG element for the second chart
-// const svg2 = d3.select("#chart-area2")
-//     .append("svg")
-//     .attr("width", game_width)
-//     .attr("height", game_height);
-
-// const svg3 = d3.select("#chart-area3")
-//     .append("svg")
-//     .attr("width", game_width)
-//     .attr("height", game_height);
 
 getData(data);
 
@@ -34,6 +20,3 @@ function getData(data) {
     )
     console.log(data)
 }
-
-
-

@@ -10,48 +10,52 @@ const game_bar_config = {
 
 const game_pie_config = {
     width: game_width / 3,
-    height: game_height / 3
+    height: game_height / 3,
+    radius: Math.min(game_width / 3, game_height / 3) / 2
 };
-
 
 const svg1 = d3.select("#chart-area1")
     .append("svg")
     .attr("width", game_width)
     .attr("height", game_height);
 
-var radius = Math.min(game_pie_config.width, game_pie_config.height) / 2;
-var arc = d3.arc()
-    .outerRadius(radius)
-    .innerRadius(0)
-var pie = d3.pie()
-    .sort(null)
-    .value((d) => d);
+
+function salesCount(data) {
+    var sales = [0, 0, 0, 0, 0];
+    data.forEach((d) => {
+        sales[0] += d.NA_Sales;
+        sales[1] += d.EU_Sales;
+        sales[2] += d.JP_Sales;
+        sales[3] += d.Other_Sales;
+        sales[4] += d.Global_Sales;
+    });
+    return sales
+}
+
 
 function gamePieChart(data) {
-    var sales = [0, 0, 0, 0];
-    var sales_categories = ["NA", "EU", "JP", "Other"];
-
     data.then(d => {
-        d.forEach((d) => {
-            sales[0] += d.NA_Sales;
-            sales[1] += d.EU_Sales;
-            sales[2] += d.JP_Sales;
-            sales[3] += d.Other_Sales;
-        });
-
+        var sales = salesCount(d).slice(0, 4);
+        var sales_categories = ["NA", "EU", "JP", "Other"];
         console.log(sales);
 
         var color = d3.scaleOrdinal()
             .domain(sales_categories)
             .range(["#097ebe", "#ff7c2a", "#0c9903", "#cd2701"]);
 
+        var pie = d3.pie()
+            .sort(null)
+            .value((d) => d);
 
-
-        var pieData = pie(sales);
+        var pieData = pie(sales)
+        var radius = game_pie_config.radius
+        var arc = d3.arc()
+            .outerRadius(radius)
+            .innerRadius(0)
 
         var g = svg1.append("g")
             .attr("id", "Pie")
-            .attr("transform", "translate(" + game_width / 4 + "," + radius + ")")
+            .attr("transform", "translate(" + game_width / 4 + "," + radius + 10 + ")")
             .attr("class", "chart")
 
         g.selectAll("path")
@@ -61,37 +65,32 @@ function gamePieChart(data) {
             .attr("d", arc)
             .attr("fill", (d) => color(d.data))
             .each(function (d) { this._current = d; });
+
+        g.selectAll("text")
+            .data(pieData)
+            .join("text")
+            .attr("id", "pie-text")
+            .attr("transform", d => `translate(${arc.centroid(d)})`)
+            .attr("dy", "0.35em")
+            .attr("text-anchor", "middle")
+            .text(d => `${(d.data / d3.sum(sales) * 100).toFixed(1)}%`);
     });
 }
 
 function gameBarChart(data) {
     data.then(d => {
-
-        var sales = [0, 0, 0, 0, 0];
-
-        d.forEach((d) => {
-            sales[0] += d.NA_Sales;
-            sales[1] += d.EU_Sales;
-            sales[2] += d.JP_Sales;
-            sales[3] += d.Other_Sales;
-            sales[4] += d.Global_Sales;
-        });
-
+        var sales = salesCount(d).slice(0,4);
         var bar = [
             { region: "NA", sales: sales[0] },
             { region: "EU", sales: sales[1] },
             { region: "JP", sales: sales[2] },
             { region: "Other", sales: sales[3] },
-            { region: "Global", sales: sales[4] }
+            // { region: "Global", sales: sales[4] }
         ]
-
-        // console.log(bar);
 
         bar.sort(function (b, a) {
             return a.sales - b.sales;
         });
-
-        // console.log(bar);
 
         var x = d3.scaleBand()
             .domain(bar.map(d => d.region))
@@ -99,31 +98,39 @@ function gameBarChart(data) {
             .padding(0.5);
 
         const xAxisCall = d3.axisBottom(x)
+
         // .ticks(10);
 
         var y = d3.scaleLinear()
-            .domain([0, d3.max(sales)])
+            .domain([0, d3.max(sales) + 10])
             .range([game_bar_config.height, 0]);
 
         const yAxisCall = d3.axisLeft(y)
             .ticks(10);
 
+
         var g = svg1.append("g")
-            .attr("transform", "translate(" + game_width / 2 + ", 0 )")
+            .attr("transform", "translate(" + game_width / 2 + ", 10 )")
             .attr("id", "Bar")
 
         g.append("g")
             .attr("transform", "translate( 0, " + game_bar_config.height + " )")
-            .attr("id", "game-bar")
+            .attr("id", "bar-x-axis")
+            .attr("class", "text")
+            .style("font-size", "17px")
+            .style("font-family", "Roboto Mono")
             .call(xAxisCall);
 
-
         g.append("g")
+            .attr("id", "bar-y-axis")
+            .style("font-size", "17px")
+            .style("font-family", "Roboto Mono")
             .call(yAxisCall)
 
         g.selectAll("rect")
             .data(bar)
             .enter().append("rect")
+            .attr("id", "game-bar")
             .attr("x", d => x(d.region))
             .attr("y", d => y(d.sales))
             .attr("width", x.bandwidth())
@@ -134,7 +141,7 @@ function gameBarChart(data) {
 
 function gameBubbleChart(data) {
     data.then(d => {
-        d = d.filter(d => d.Global_Sales > 10);
+        d = d.filter(d => d.Global_Sales > 5);
         const color = d3.scaleOrdinal(d3.schemeCategory10);
 
         const pack = d3.pack()
@@ -145,7 +152,7 @@ function gameBubbleChart(data) {
         console.log(root.leaves());
 
         const g = svg1.append("g")
-            .attr("transform", "translate(0, " + game_height / 3 + " )")
+            .attr("transform", "translate(0, " + game_height / 2 + " )")
             .attr("id", "Bubble")
 
         const node = g.selectAll("g")
@@ -207,13 +214,16 @@ function gameBubbleChart(data) {
             if (d.data.Name == game) {
                 game = null;
                 circle.attr("stroke", null);
-                upGamePie();
+                // upGamePie();
             }
             else {
                 game = d.data.Name;
-                circle.attr("stroke", hasStroke ? null : "black");
-                upGamePie();
+                circle.attr("stroke", hasStroke ? null : "black")
+                circle.attr("stroke-width", 2)
+
             }
+            upGamePie();
+            upGameBar();
             console.log("Selected Circle Name:", game);
         }
     });
