@@ -32,12 +32,11 @@ function salesCount(data) {
     return sales
 }
 
-
 function gamePieChart(data) {
     data.then(d => {
+        d = d.filter(d => d.Rank <= 100);
         var sales = salesCount(d).slice(0, 4);
         var sales_categories = ["NA", "EU", "JP", "Other"];
-        console.log(sales);
 
         var color = d3.scaleOrdinal()
             .domain(sales_categories)
@@ -47,39 +46,92 @@ function gamePieChart(data) {
             .sort(null)
             .value((d) => d);
 
-        var pieData = pie(sales)
-        var radius = game_pie_config.radius
+        var pieData = pie(sales);
+        var radius = game_pie_config.radius;
         var arc = d3.arc()
             .outerRadius(radius)
-            .innerRadius(0)
+            .innerRadius(0);
+
+        var labelArc = d3.arc().outerRadius(radius + 20).innerRadius(radius + 20);
 
         var g = svg1.append("g")
             .attr("id", "Pie")
             .attr("transform", "translate(" + game_width / 4 + "," + radius + 10 + ")")
-            .attr("class", "chart")
+            .attr("class", "chart");
 
-        g.selectAll("path")
+        var arcs = g.selectAll("path")
             .data(pieData)
             .join("path")
             .attr("id", "game-pie")
             .attr("d", arc)
             .attr("fill", (d) => color(d.data))
+            .attr("transform", "translate(0," + 70 + ")")
             .each(function (d) { this._current = d; });
 
-        g.selectAll("text")
+        var labels = g.selectAll("text")
             .data(pieData)
             .join("text")
             .attr("id", "pie-text")
-            .attr("transform", d => `translate(${arc.centroid(d)})`)
+            .attr("transform", function (d) {
+                var pos = labelArc.centroid(d);
+                var isLeftSide = pos[0] < 0;
+                if (isLeftSide) {
+                    return `translate(${-radius - 100},${pos[1] + 70})`;
+                }
+                else
+                    return `translate(${radius + 100}, ${pos[1] + 70})`;
+            })
             .attr("dy", "0.35em")
-            .attr("text-anchor", "middle")
             .text(d => `${(d.data / d3.sum(sales) * 100).toFixed(1)}%`);
+
+        var lines = g.selectAll("line")
+            .data(pieData)
+            .join("line")
+            .attr("id","line1")
+            .attr("stroke", "black")
+            .attr("x1", function (d) {
+                return labelArc.centroid(d)[0];
+            })
+            .attr("y1", function (d) {
+                return labelArc.centroid(d)[1] + 70;
+            })
+            .attr("x2", function (d) {
+                return arc.centroid(d)[0];
+            })
+            .attr("y2", function (d) {
+                return arc.centroid(d)[1] + 70;
+            });
+        console.log(lines);
+
+            
+        var connectingLines = g.selectAll("line.connecting")
+            .data(pieData)
+            .join("line")
+            .attr("id", "connecting")
+            .attr("stroke", "black")
+            .attr("x1", function (d,i) {
+                return lines.nodes()[i].getAttribute("x1");
+            })
+            .attr("y1", function (d,i) {
+                return lines.nodes()[i].getAttribute("y1");
+            })
+            .attr("x2", function (d) {
+                var pos = labelArc.centroid(d);
+                var isLeftSide = pos[0] < 0;
+                return isLeftSide ? -radius - 50 : radius + 80;
+            })
+            .attr("y2", function (d) {
+                var pos = labelArc.centroid(d);
+                return pos[1] + 70;
+            });
     });
 }
 
 function gameBarChart(data) {
     data.then(d => {
-        var sales = salesCount(d).slice(0,4);
+        d = d.filter(d => d.Rank <= 100);
+
+        var sales = salesCount(d).slice(0, 4);
         var bar = [
             { region: "NA", sales: sales[0] },
             { region: "EU", sales: sales[1] },
@@ -99,18 +151,16 @@ function gameBarChart(data) {
 
         const xAxisCall = d3.axisBottom(x)
 
-        // .ticks(10);
-
         var y = d3.scaleLinear()
             .domain([0, d3.max(sales) + 10])
             .range([game_bar_config.height, 0]);
 
         const yAxisCall = d3.axisLeft(y)
-            .ticks(10);
+            .ticks(8);
 
 
         var g = svg1.append("g")
-            .attr("transform", "translate(" + game_width / 2 + ", 10 )")
+            .attr("transform", "translate(" + game_width / 2 + ", 70 )")
             .attr("id", "Bar")
 
         g.append("g")
@@ -141,18 +191,25 @@ function gameBarChart(data) {
 
 function gameBubbleChart(data) {
     data.then(d => {
-        d = d.filter(d => d.Global_Sales > 5);
-        const color = d3.scaleOrdinal(d3.schemeCategory10);
+        d = d.filter(d => d.Rank <= 100);
+
+        const gameGenre = ["Sports", "Platfrom", "Racing", "Role-Playing", "Puzzle", "Misc",
+            "Shooter", "Racing", "Action", "Fighting", "Adventure", "Strategy"];
+
+        const color = d3.scaleOrdinal()
+            .domain(gameGenre)
+            .range(["#d8b3ca", "#da9ada", "#a290db", "#5d6a84", "#5d6ac9", "#4090dc",
+                "#a3c5dc", "#5cc4c9", "#409079", "#779079", "#d8b579", "#d89079"]);
 
         const pack = d3.pack()
-            .size([game_width, game_height * 3 / 4])
+            .size([game_width / 2, game_height / 2])
             .padding(5);
 
         const root = pack(d3.hierarchy({ children: d }).sum(d => d.Global_Sales));
         console.log(root.leaves());
 
         const g = svg1.append("g")
-            .attr("transform", "translate(0, " + game_height / 2 + " )")
+            .attr("transform", `translate(${game_width / 4},${game_height / 2})`)
             .attr("id", "Bubble")
 
         const node = g.selectAll("g")
@@ -166,16 +223,14 @@ function gameBubbleChart(data) {
         node.append("circle")
             .attr("fill-opacity", 0.7)
             .attr("fill", d => color(d.data.Genre))
-            .attr("r", d => d.r);
+            .attr("r", d => d.r)
 
-        // Add a title
         node.append("title")
             .text(d => `${d.data.Name}\nGenre: ${d.data.Genre}\nGlobal Sales: ${d.data.Global_Sales}`);
 
-        // Create force simulation and bind data
         var simulation = d3.forceSimulation()
             .force('charge', d3.forceManyBody().strength(5))
-            .force('y', d3.forceY().y(game_height / 4)) // Adjust the y-coordinate based on your requirements
+            .force('y', d3.forceY().y(game_height / 4))
             .force('collision', d3.forceCollide().radius(function (d) {
                 return d.r + 3;
             }));
@@ -200,13 +255,14 @@ function gameBubbleChart(data) {
             d.fx = null;
             d.fy = null;
         }
+
         function tick() {
             node.attr('transform', function (d) {
                 return `translate(${d.x},${d.y})`;
             });
         }
-        function handleClick(event, d) {
 
+        function handleClick(event, d) {
             svg1.selectAll("circle").attr("stroke", null);
 
             const circle = d3.select(this).select("circle");
@@ -214,7 +270,6 @@ function gameBubbleChart(data) {
             if (d.data.Name == game) {
                 game = null;
                 circle.attr("stroke", null);
-                // upGamePie();
             }
             else {
                 game = d.data.Name;
@@ -226,6 +281,7 @@ function gameBubbleChart(data) {
             upGameBar();
             console.log("Selected Circle Name:", game);
         }
+
     });
 }
 

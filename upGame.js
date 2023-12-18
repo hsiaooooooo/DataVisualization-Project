@@ -1,21 +1,25 @@
 function upGamePie() {
     data.then(d => {
-        // console.log(game);
         if (game != null)
             d = d.filter(d => d.Name == game)
-        // console.log(d);
+        else {
+            d = d.filter(d => d.Rank <= 100)
+        }
 
         var sales = salesCount(d).slice(0, 4);
 
         var pie = d3.pie()
             .sort(null)
             .value((d) => d);
+
         var radius = game_pie_config.radius
+        var labelArc = d3.arc().outerRadius(radius + 20).innerRadius(radius + 20);
 
         var arc = d3.arc()
             .outerRadius(radius)
             .innerRadius(0)
 
+        // update path
         const newPieData = pie(sales);
         const paths = d3.selectAll("#game-pie")
 
@@ -30,14 +34,62 @@ function upGamePie() {
                 };
             })
 
+        // update labels
         let percentage = d3.selectAll("#pie-text")
             .data(newPieData)
 
         percentage.transition().duration(1000)
-            .attr("transform", d => `translate(${arc.centroid(d)})`)
+            .attr("transform", function (d) {
+                var pos = labelArc.centroid(d);
+                var isLeftSide = pos[0] < 0;
+                if (isLeftSide) {
+                    return `translate(${-radius - 100},${pos[1] + 70})`;
+                }
+                else
+                    return `translate(${radius + 100}, ${pos[1] + 70})`;
+            })
             .attr("dy", "0.35em")
             .attr("text-anchor", "middle")
             .text(d => `${(d.data / d3.sum(sales) * 100).toFixed(1)}%`);
+
+        // update line1
+        let line1 = d3.selectAll("#line1")
+            .data(newPieData)
+        line1.transition().duration(1000)
+            .attr("x1", function (d) {
+                return labelArc.centroid(d)[0];
+            })
+            .attr("y1", function (d) {
+                return labelArc.centroid(d)[1] + 70;
+            })
+            .attr("x2", function (d) {
+                return arc.centroid(d)[0];
+            })
+            .attr("y2", function (d) {
+                return arc.centroid(d)[1] + 70;
+            });
+        // update connecting line
+        let connectingLine = d3.selectAll("#connecting")
+            .data(newPieData)
+
+        connectingLine.transition().duration(1000)
+            .attr("x1", function (d, i) {
+                // console.log("connect")
+                console.log(line1.nodes())
+                return line1.nodes()[i].getAttribute("x1");
+            })
+            .attr("y1", function (d, i) {
+                return line1.nodes()[i].getAttribute("y1");
+            })
+            .attr("x2", function (d) {
+                var pos = labelArc.centroid(d);
+                var isLeftSide = pos[0] < 0;
+                return isLeftSide ? -radius - 50 : radius + 80;
+            })
+            .attr("y2", function (d) {
+                var pos = labelArc.centroid(d);
+                return pos[1] + 70;
+            });
 
     })
 }
@@ -47,8 +99,11 @@ function upGameBar() {
         if (game != null) {
             d = d.filter(d => d.Name == game)
         }
+        else {
+            d = d.filter(d => d.Rank <= 100)
+        }
 
-        var sales = salesCount(d).slice(0,4);
+        var sales = salesCount(d).slice(0, 4);
 
         var bar = [
             { region: "NA", sales: sales[0] },
@@ -74,7 +129,7 @@ function upGameBar() {
             .range([game_bar_config.height, 0]);
 
         const yAxis_new = d3.axisLeft(y)
-            .ticks(10)
+            .ticks(8)
 
         d3.selectAll("#bar-y-axis")
             .transition().duration(1000)
