@@ -32,6 +32,7 @@ var PublisherCounts = {};
 var Publisherkeys;
 var PlatformCounts = {};
 var PlatformKeys;
+
 const top5Publisher=[];
 const top5Platform=[];
 
@@ -47,7 +48,8 @@ d3.csv("vgsales.csv").then(data =>{
     sec_pie(data);
     top5(top5Publisher, PublisherCounts, Publisherkeys);console.log(top5Publisher);
     top5(top5Platform, PlatformCounts, PlatformKeys);console.log(top5Platform);
-
+    sec_bar_pub(data);
+    sec_bar_plat(data);
 
     //console.log(data);
 });
@@ -173,7 +175,7 @@ function sec_donut(data, keys)
             .attr("text-anchor", "middle")
             .attr("font-family", "Century")
             .attr("fill", "#004b62")
-            .attr("transform", 'translate('+sec_donut_set.width/2+', ' + sec_donut_set.height*2/3 + ')')
+            .attr("transform", 'translate('+(sec_donut_set.width/40)+', ' + (sec_donut_set.height+30) + ')')
             .text("Genre")
     
     //pie chart
@@ -195,15 +197,92 @@ function sec_donut(data, keys)
                     .attr("fill", (d, i) => {
                         return donut_color[i];
                     })
-                    .attr("transform", 'translate('+sec_donut_set.width+', ' + sec_donut_set.height*3/2 + ')');
+                    .attr("transform", 'translate('+(sec_donut_set.width/3+100)+', ' + (sec_donut_set.height+150) + ')');
 
 
 }
 
 
 
-function sec_bar(data)
+function sec_bar_pub(data)
 {
+    const group2=svg2.append('g')
+
+    var bar_color=['#d89079', '#5cc4c9', '#4090dc', '#d8b3ca', '#d8b579'];
+    //X label
+    group2.append("text")
+                .attr("x", sec_bar_set.width )
+                .attr("y",sec_bar_set.height+50)
+                .attr("font-size", "20px")
+                //.attr("text-anchor", "middle")
+                .text("Sales").attr("fill", "black")
+    const bar_x = d3.scaleLinear()
+                .domain([0, d3.max(top5Publisher, d=>d.value)])
+                .range([0, sec_bar_set.width*2/3])
+    const bar_xAxisCall = d3.axisBottom(bar_x)
+    group2.append("g").call(bar_xAxisCall)
+                .attr("transform", 'translate('+sec_bar_set.width*99/100+', '+sec_bar_set.height*2/3+')')
+    // Y label
+    const bar_y = d3.scaleBand()
+                .domain(top5Publisher.map(d=>d.name))
+                .range([sec_bar_set.height*2/3, 0])
+    const bar_yAxisCall = d3.axisLeft(bar_y).ticks(10)
+    group2.append("g").call(bar_yAxisCall)
+                .attr("transform", 'translate('+sec_bar_set.width*99/100+', '+0+')')
+
+    var bar_rects=group2.append("g").selectAll("rect")
+                .data(top5Publisher)
+                .enter().append("rect")
+                .attr("x", sec_bar_set.width*99/100)
+                .attr("y", d => bar_y(d.name))
+                .attr("width", d=> bar_x(d.value))
+                .attr("height", 30)
+                .style("fill", function (d, i) {
+                    return bar_color[i];
+                })
+                //.attr("transfrom", 'translate(0, '+sec_bar_set.height+')')
+
+
+}
+
+function sec_bar_plat(data)
+{
+    const group2=svg2.append('g').attr("transform", 'translate('+0+', '+(sec_bar_set.height)+')')
+
+    var bar_color=['#d89079', '#5cc4c9', '#4090dc', '#d8b3ca', '#d8b579'];
+    //X labeld89079
+    group2.append("text")
+                .attr("x", sec_bar_set.width )
+                .attr("y",sec_bar_set.height+50)
+                .attr("font-size", "20px")
+                //.attr("text-anchor", "middle")
+                .text("Sales").attr("fill", "black")
+    const bar_x = d3.scaleLinear()
+                .domain([0, d3.max(top5Platform, d=>d.value)])
+                .range([0, sec_bar_set.width*2/3])
+    const bar_xAxisCall = d3.axisBottom(bar_x)
+    group2.append("g").call(bar_xAxisCall)
+                .attr("transform", 'translate('+sec_bar_set.width*99/100+', '+sec_bar_set.height*2/3+')')
+    // Y label
+    const bar_y = d3.scaleBand()
+                .domain(top5Platform.map(d=>d.name))
+                .range([sec_bar_set.height*2/3, 0])
+    const bar_yAxisCall = d3.axisLeft(bar_y).ticks(10)
+    group2.append("g").call(bar_yAxisCall)
+                .attr("transform", 'translate('+sec_bar_set.width*99/100+', '+0+')')
+
+    var bar_rects=group2.append("g").selectAll("rect")
+                .data(top5Platform)
+                .enter().append("rect")
+                .attr("x", sec_bar_set.width*99/100)
+                .attr("y", d => bar_y(d.name))
+                .attr("width", d=> bar_x(d.value))
+                .attr("height", 30)
+                .style("fill", function (d, i) {
+                    return bar_color[i];
+                })
+                //.attr("transfrom", 'translate(0, '+sec_bar_set.height+')')
+
 
 }
 
@@ -241,7 +320,7 @@ function sec_pie(data)
             .attr("text-anchor", "middle")
             .attr("font-family", "Century")
             .attr("fill", "#004b62")
-            .attr("transform", 'translate('+sec_pie_set.width/2+', 0)')
+            .attr("transform", 'translate('+sec_pie_set.width/12+', '+(-10)+')')
             .text("Sales Ratio")
     
     //pie chart
@@ -258,6 +337,6 @@ function sec_pie(data)
                     .attr("fill", (d, i) => {
                         return pie_color[i];
                     })
-                    .attr("transform", 'translate('+sec_pie_set.width+', 100)');
+                    .attr("transform", 'translate('+(sec_pie_set.width/3+100)+', 100)');
 
 }
