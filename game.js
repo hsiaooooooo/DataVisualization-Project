@@ -14,14 +14,20 @@ const game_bar_config = {
 const game_pie_config = {
     width: game_width / 3,
     height: game_height / 3,
-    radius: Math.min(game_width / 3, game_height / 3) / 2
+    radius: Math.min(game_width / 4, game_height / 4) / 2
 };
 
 const svg1 = d3.select("#chart-area1")
     .append("svg")
     .attr("width", game_width)
-    .attr("height", game_height);
+    .attr("height", game_height)
 
+svg1.append("text")
+    .attr("x", game_width / 2)
+    .attr("y", 30)
+    .attr("text-anchor", "middle")
+    .style("font-size", "30px")
+    .text("Top 100 Games");
 
 function salesCount(data) {
     var sales = [0, 0, 0, 0, 0];
@@ -72,10 +78,10 @@ function gamePieChart(data) {
                 var pos = labelArc.centroid(d);
                 var isLeftSide = pos[0] < 0;
                 if (isLeftSide) {
-                    return `translate(${pos[0] - radius * 0.075},${pos[1] + radius * 0.5})`;
+                    return `translate(${pos[0] - radius * 0.075},${pos[1] + radius * 0.7})`;
                 }
                 else
-                    return `translate(${pos[0]}, ${pos[1] + radius * 0.4})`;
+                    return `translate(${pos[0] - radius *0.2}, ${pos[1] + radius * 0.4})`;
             })
             .attr("dy", "0.35em")
             .attr("font-size", "20px")

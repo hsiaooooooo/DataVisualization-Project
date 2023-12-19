@@ -43,10 +43,10 @@ function upGamePie() {
                 var pos = labelArc.centroid(d);
                 var isLeftSide = pos[0] < 0;
                 if (isLeftSide) {
-                    return `translate(${pos[0] - radius * 0.075},${pos[1] + radius * 0.5})`;
+                    return `translate(${pos[0] - radius * 0.075},${pos[1] + radius * 0.4})`;
                 }
                 else
-                    return `translate(${pos[0]}, ${pos[1] + radius * 0.4})`;
+                    return `translate(${pos[0] - radius * 0.2}, ${pos[1] + radius * 0.4})`;
             })
             .attr("class", "label")
             .text(d => `${(d.data / d3.sum(sales) * 100).toFixed(1)}%`)
