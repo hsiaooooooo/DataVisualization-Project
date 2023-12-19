@@ -50,18 +50,19 @@ function gamePieChart(data) {
             .value((d) => d);
         pieData = pie(sales);
 
+        // Radius Settings
+        var radius = game_pie_config.radius;
+        var arc = d3.arc().outerRadius(radius).innerRadius(0);
+        var labelArc = d3.arc().outerRadius(radius + 100).innerRadius(radius + 20);
+        var arcOver = d3.arc().outerRadius(radius + 9).innerRadius(0);
+
         //  Set Position
         var g = svg1.append("g")
             .attr("id", "Pie")
             .attr("transform", "translate(" + game_width / 4 + "," + radius + 10 + ")")
             .attr("class", "chart");
 
-        // Pie Settings
-        var radius = game_pie_config.radius;
-        var arc = d3.arc().outerRadius(radius).innerRadius(0);
-        var labelArc = d3.arc().outerRadius(radius + 100).innerRadius(radius + 20);
-        var arcOver = d3.arc().outerRadius(radius + 9).innerRadius(0);
-
+        // Draw Pie
         var arcs = g.selectAll("path")
             .data(pieData)
             .join("path")
