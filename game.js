@@ -56,29 +56,13 @@ function gamePieChart(data) {
         var labelArc = d3.arc().outerRadius(radius + 100).innerRadius(radius + 20);
         var arcOver = d3.arc().outerRadius(radius + 9).innerRadius(0);
 
-        //  Set Position
+        // Set position
         var g = svg1.append("g")
             .attr("id", "Pie")
             .attr("transform", "translate(" + game_width / 4 + "," + radius + 10 + ")")
             .attr("class", "chart");
 
-        // Draw Pie
-        var arcs = g.selectAll("path")
-            .data(pieData)
-            .join("path")
-            .attr("class", "path")
-            .attr("id", "game-pie")
-            .attr("d", arc)
-            .attr("fill", (d) => color(d.data))
-            .attr("transform", "translate(0," + 70 + ")")
-            .on("mouseenter", function (event, d) {
-                handleMouseEnter.call(this, event, d, arcOver, pieData, g);
-            })
-            .on("mouseleave", function (d) {
-                handleMouseLeave.call(this, d, arc, g);
-            })
-
-        // Text label Settings
+        // Set Text Labels
         var labels = g.selectAll("text")
             .data(pieData)
             .join("text")
@@ -98,6 +82,21 @@ function gamePieChart(data) {
             .style("visibility", "hidden")
             .text(d => `${(d.data / d3.sum(sales) * 100).toFixed(1)}%`);
 
+        // Draw Pie
+        var arcs = g.selectAll("path")
+            .data(pieData)
+            .join("path")
+            .attr("class","path")
+            .attr("id", "game-pie")
+            .attr("d", arc)
+            .attr("fill", (d) => color(d.data))
+            .attr("transform", "translate(0," + 70 + ")")
+            .on("mouseenter", function (event, d) {
+                handleMouseEnter.call(this, event, d, arcOver, pieData, g);
+            })
+            .on("mouseleave", function (d) {
+                handleMouseLeave.call(this, d, arc, g);
+            })
     });
 }
 
