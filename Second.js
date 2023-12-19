@@ -20,10 +20,30 @@ const sec_bar_set={
 const svg2=d3.select("#chart-area2").append("svg")
             .attr("width", sec_game_width).attr("height", 800);
 
-function sec_pie(data)
-{
-
-}
+document.addEventListener('DOMContentLoaded', function () {
+    var startYear = 1980;
+    var endYear = 2016;
+    var maxDropdownHeight = 200; // Set your desired maximum height in pixels
+            
+    var dropdown = document.getElementById('yearDropdown');
+            
+                // Generate options dynamically using a loop
+    for (var year = startYear; year <= endYear; year++) {
+        var option = document.createElement('div');
+        option.textContent = year;
+            
+        option.addEventListener('click', function () {
+            var selectedYear = this.textContent; // Retrieve the selected value
+            console.log('Selected Year:', selectedYear);
+        });
+            
+        dropdown.appendChild(option);
+    }
+            
+    // Set maximum height and enable scrolling
+    dropdown.style.maxHeight = maxDropdownHeight + 'px';
+    dropdown.style.overflowY = 'auto';
+});
 
 var GenreCounts = {};
 var Genrekeys;

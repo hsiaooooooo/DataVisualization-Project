@@ -5,9 +5,7 @@
     <meta charset="utf-8">
     <meta name="description" content="">
     <title>Video Game Sales</title>
-</head>
 
-<body style="background-color: #fEF7E1;">
     <style>
         .d3-tip {
             line-height: 1;
@@ -27,6 +25,7 @@
             width: 48vw;
             height: 48vh;
         }
+
         /* Dropdown Button */
         .dropbtn {
             background-color: #004b62;
@@ -42,7 +41,7 @@
             display: inline-block;
         }
 
-/* Dropdown Content (Hidden by Default) */
+        /* Dropdown Content (Hidden by Default) */
         .dropdown-content {
             display: none;
             position: absolute;
@@ -50,10 +49,12 @@
             min-width: 160px;
             box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
             z-index: 1;
+            max-height: 200px;
+            overflow-y: auto;
         }
 
         /* Links inside the dropdown */
-        .dropdown-content a {
+        .dropdown-content div {
             color: black;
             padding: 12px 16px;
             text-decoration: none;
@@ -61,68 +62,61 @@
         }
 
         /* Change color of dropdown links on hover */
-        .dropdown-content a:hover {background-color: #ddd;}
+        .dropdown-content div:hover {background-color: #ddd;}
 
         /* Show the dropdown menu on hover */
         .dropdown:hover .dropdown-content {display: block;}
 
         /* Change the background color of the dropdown button when the dropdown content is shown */
         .dropdown:hover .dropbtn {background-color: #004b62;}
-        
     </style>
+</head>
+
+<body style="background-color: #fEF7E1;">
 
     <div id="chart-area1" class="chart"></div>
     <div id="chart-area2" class="chart">
         <div class="dropdown">
             <button class="dropbtn">Year</button>
-            <!-- <div class="dropdown-content">
-                <a href="#">1980</a>
-                <a href="#">1981</a>
-                <a href="#">1982</a>
-                
-            </div> -->
             <div class="dropdown-content" id="yearDropdown">
                 <!-- Options will be added dynamically using JavaScript -->
             </div>
-            
-            <script>
-                var startYear = 1980;
-                var endYear = 2016;
-                var maxDropdownHeight = 200; // Set your desired maximum height in pixels
-            
-                var dropdown = document.getElementById('yearDropdown');
-                
-                // Generate options dynamically using a loop
-                for (var year = startYear; year <= endYear; year++) {
-                    var option = document.createElement('a');
-                    option.href = '#';
-                    option.textContent = year;
-                    dropdown.appendChild(option);
-                }
-            
-                // Set maximum height and enable scrolling
-                dropdown.style.maxHeight = maxDropdownHeight + 'px';
-                dropdown.style.overflowY = 'auto';
-            </script>
-            
         </div>
     </div>
     <div id="second-row-container">
         <div id="chart-area3"></div>
-        
     </div>
-    
-
 
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <script src="d3-tip.js"></script>
-    
-
     <script src="game.js"></script>
     <script src="Second.js"></script>
     <script src="main.js"></script>
-    
-    
+
+    <!-- <script>
+        var startYear = 1980;
+        var endYear = 2016;
+        var maxDropdownHeight = 200; // Set your desired maximum height in pixels
+
+        var dropdown = document.getElementById('yearDropdown');
+
+        // Generate options dynamically using a loop
+        for (var year = startYear; year <= endYear; year++) {
+            var option = document.createElement('div');
+            option.textContent = year;
+
+            option.addEventListener('click', function () {
+                var selectedYear = this.textContent; // Retrieve the selected value
+                console.log('Selected Year:', selectedYear);
+            });
+
+            dropdown.appendChild(option);
+        }
+
+        // Set maximum height and enable scrolling
+        dropdown.style.maxHeight = maxDropdownHeight + 'px';
+        dropdown.style.overflowY = 'auto';
+    </script> -->
 
 </body>
 
