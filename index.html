@@ -27,14 +27,91 @@
             width: 48vw;
             height: 48vh;
         }
+        /* Dropdown Button */
+        .dropbtn {
+            background-color: #004b62;
+            color: white;
+            padding: 16px;
+            font-size: 16px;
+            border: none;
+        }
+
+        /* The container <div> - needed to position the dropdown content */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+/* Dropdown Content (Hidden by Default) */
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f1f1f1;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+        /* Links inside the dropdown */
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        /* Change color of dropdown links on hover */
+        .dropdown-content a:hover {background-color: #ddd;}
+
+        /* Show the dropdown menu on hover */
+        .dropdown:hover .dropdown-content {display: block;}
+
+        /* Change the background color of the dropdown button when the dropdown content is shown */
+        .dropdown:hover .dropbtn {background-color: #004b62;}
         
     </style>
 
     <div id="chart-area1" class="chart"></div>
-    <div id="chart-area2" class="chart"></div>
+    <div id="chart-area2" class="chart">
+        <div class="dropdown">
+            <button class="dropbtn">Year</button>
+            <!-- <div class="dropdown-content">
+                <a href="#">1980</a>
+                <a href="#">1981</a>
+                <a href="#">1982</a>
+                
+            </div> -->
+            <div class="dropdown-content" id="yearDropdown">
+                <!-- Options will be added dynamically using JavaScript -->
+            </div>
+            
+            <script>
+                var startYear = 1980;
+                var endYear = 2016;
+                var maxDropdownHeight = 200; // Set your desired maximum height in pixels
+            
+                var dropdown = document.getElementById('yearDropdown');
+                
+                // Generate options dynamically using a loop
+                for (var year = startYear; year <= endYear; year++) {
+                    var option = document.createElement('a');
+                    option.href = '#';
+                    option.textContent = year;
+                    dropdown.appendChild(option);
+                }
+            
+                // Set maximum height and enable scrolling
+                dropdown.style.maxHeight = maxDropdownHeight + 'px';
+                dropdown.style.overflowY = 'auto';
+            </script>
+            
+        </div>
+    </div>
     <div id="second-row-container">
         <div id="chart-area3"></div>
+        
     </div>
+    
 
 
     <script src="https://d3js.org/d3.v5.min.js"></script>
@@ -44,6 +121,7 @@
     <script src="game.js"></script>
     <script src="Second.js"></script>
     <script src="main.js"></script>
+    
     
 
 </body>

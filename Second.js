@@ -32,6 +32,8 @@ var PublisherCounts = {};
 var Publisherkeys;
 var PlatformCounts = {};
 var PlatformKeys;
+var year; //1980-2016
+//var yearCounts={};
 
 const top5Publisher=[];
 const top5Platform=[];
@@ -39,7 +41,7 @@ const top5Platform=[];
 d3.csv("vgsales.csv").then(data =>{
     preprocess(data);
     processPie(data);//console.log(SalesCounts);
-    processData(data);//console.log(GenreCounts)
+    processData(data);//console.log(yearCounts);//console.log(GenreCounts)
     Genrekeys = Object.keys(GenreCounts);//console.log(keys);//console.log(PublisherCounts);
     Publisherkeys = Object.keys(PublisherCounts);//console.log(Publisherkeys);
     PlatformKeys = Object.keys(PlatformCounts);//console.log(PlatformKeys);
@@ -65,6 +67,11 @@ function preprocess(data) {
         })
     //)
     //console.log(data)
+}
+
+function filterData()
+{
+
 }
 
 function processData(data){
@@ -106,6 +113,14 @@ function processData(data){
             PlatformCounts[item.Platform]+=item.JP_Sales;
             PlatformCounts[item.Platform]+=item.Other_Sales;
         }
+
+        // if(yearCounts.hasOwnProperty(item.Year))
+        // {
+        //     yearCounts[item.Year]++;
+        // }
+        // else{
+        //     yearCounts[item.Year]=1;
+        // }
     })
 }
 
