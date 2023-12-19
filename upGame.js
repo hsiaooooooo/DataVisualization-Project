@@ -13,17 +13,17 @@ function upGamePie() {
             .value((d) => d);
 
         var radius = game_pie_config.radius
-        var labelArc = d3.arc().outerRadius(radius + 20).innerRadius(radius + 20);
+        var labelArc = d3.arc().outerRadius(radius + 100).innerRadius(radius + 20);
 
         var arc = d3.arc()
             .outerRadius(radius)
             .innerRadius(0)
 
         // update path
-        const newPieData = pie(sales);
+        pieData = pie(sales);
         const paths = d3.selectAll("#game-pie")
 
-        paths.data(newPieData)
+        paths.data(pieData)
             .transition()
             .duration(1000)
             .attrTween("d", function (d) {
@@ -35,62 +35,21 @@ function upGamePie() {
             })
 
         // update labels
-        let percentage = d3.selectAll("#pie-text")
-            .data(newPieData)
+        let percentage = d3.selectAll(".label")
+            .data(pieData)
 
         percentage.transition().duration(1000)
             .attr("transform", function (d) {
                 var pos = labelArc.centroid(d);
                 var isLeftSide = pos[0] < 0;
                 if (isLeftSide) {
-                    return `translate(${-radius - 100},${pos[1] + 70})`;
+                    return `translate(${pos[0] - radius * 0.075},${pos[1] + radius * 0.5})`;
                 }
                 else
-                    return `translate(${radius + 100}, ${pos[1] + 70})`;
+                    return `translate(${pos[0]}, ${pos[1] + radius * 0.4})`;
             })
-            .attr("dy", "0.35em")
-            .attr("text-anchor", "middle")
-            .text(d => `${(d.data / d3.sum(sales) * 100).toFixed(1)}%`);
-
-        // update line1
-        let line1 = d3.selectAll("#line1")
-            .data(newPieData)
-        line1.transition().duration(1000)
-            .attr("x1", function (d) {
-                return labelArc.centroid(d)[0];
-            })
-            .attr("y1", function (d) {
-                return labelArc.centroid(d)[1] + 70;
-            })
-            .attr("x2", function (d) {
-                return arc.centroid(d)[0];
-            })
-            .attr("y2", function (d) {
-                return arc.centroid(d)[1] + 70;
-            });
-        // update connecting line
-        let connectingLine = d3.selectAll("#connecting")
-            .data(newPieData)
-
-        connectingLine.transition().duration(1000)
-            .attr("x1", function (d, i) {
-                // console.log("connect")
-                console.log(line1.nodes())
-                return line1.nodes()[i].getAttribute("x1");
-            })
-            .attr("y1", function (d, i) {
-                return line1.nodes()[i].getAttribute("y1");
-            })
-            .attr("x2", function (d) {
-                var pos = labelArc.centroid(d);
-                var isLeftSide = pos[0] < 0;
-                return isLeftSide ? -radius - 50 : radius + 80;
-            })
-            .attr("y2", function (d) {
-                var pos = labelArc.centroid(d);
-                return pos[1] + 70;
-            });
-
+            .attr("class", "label")
+            .text(d => `${(d.data / d3.sum(sales) * 100).toFixed(1)}%`)
     })
 }
 

@@ -1,7 +1,10 @@
+// Global variables
 const parentContainer = d3.select("#chart-area1");
 
 const game_width = parentContainer.node().getBoundingClientRect().width;
 const game_height = parentContainer.node().getBoundingClientRect().height;
+
+var pieData;
 
 const game_bar_config = {
     width: game_width / 3,
@@ -45,85 +48,55 @@ function gamePieChart(data) {
         var pie = d3.pie()
             .sort(null)
             .value((d) => d);
+        pieData = pie(sales);
 
-        var pieData = pie(sales);
-        var radius = game_pie_config.radius;
-        var arc = d3.arc()
-            .outerRadius(radius)
-            .innerRadius(0);
-
-        var labelArc = d3.arc().outerRadius(radius + 20).innerRadius(radius + 20);
-
+        //  Set Position
         var g = svg1.append("g")
             .attr("id", "Pie")
             .attr("transform", "translate(" + game_width / 4 + "," + radius + 10 + ")")
             .attr("class", "chart");
 
+        // Pie Settings
+        var radius = game_pie_config.radius;
+        var arc = d3.arc().outerRadius(radius).innerRadius(0);
+        var labelArc = d3.arc().outerRadius(radius + 100).innerRadius(radius + 20);
+        var arcOver = d3.arc().outerRadius(radius + 9).innerRadius(0);
+
         var arcs = g.selectAll("path")
             .data(pieData)
             .join("path")
+            .attr("class", "path")
             .attr("id", "game-pie")
             .attr("d", arc)
             .attr("fill", (d) => color(d.data))
             .attr("transform", "translate(0," + 70 + ")")
-            .each(function (d) { this._current = d; });
+            .on("mouseenter", function (event, d) {
+                handleMouseEnter.call(this, event, d, arcOver, pieData, g);
+            })
+            .on("mouseleave", function (d) {
+                handleMouseLeave.call(this, d, arc, g);
+            })
 
+        // Text label Settings
         var labels = g.selectAll("text")
             .data(pieData)
             .join("text")
-            .attr("id", "pie-text")
+            .attr("class", "label")
+            .attr("id", (d, i) => "label-text-" + i) // Assign a unique ID based on the index
             .attr("transform", function (d) {
                 var pos = labelArc.centroid(d);
                 var isLeftSide = pos[0] < 0;
                 if (isLeftSide) {
-                    return `translate(${-radius - 100},${pos[1] + 70})`;
+                    return `translate(${pos[0] - radius * 0.075},${pos[1] + radius * 0.5})`;
                 }
                 else
-                    return `translate(${radius + 100}, ${pos[1] + 70})`;
+                    return `translate(${pos[0]}, ${pos[1] + radius * 0.4})`;
             })
             .attr("dy", "0.35em")
+            .attr("font-size", "20px")
+            .style("visibility", "hidden")
             .text(d => `${(d.data / d3.sum(sales) * 100).toFixed(1)}%`);
 
-        var lines = g.selectAll("line")
-            .data(pieData)
-            .join("line")
-            .attr("id","line1")
-            .attr("stroke", "black")
-            .attr("x1", function (d) {
-                return labelArc.centroid(d)[0];
-            })
-            .attr("y1", function (d) {
-                return labelArc.centroid(d)[1] + 70;
-            })
-            .attr("x2", function (d) {
-                return arc.centroid(d)[0];
-            })
-            .attr("y2", function (d) {
-                return arc.centroid(d)[1] + 70;
-            });
-        console.log(lines);
-
-            
-        var connectingLines = g.selectAll("line.connecting")
-            .data(pieData)
-            .join("line")
-            .attr("id", "connecting")
-            .attr("stroke", "black")
-            .attr("x1", function (d,i) {
-                return lines.nodes()[i].getAttribute("x1");
-            })
-            .attr("y1", function (d,i) {
-                return lines.nodes()[i].getAttribute("y1");
-            })
-            .attr("x2", function (d) {
-                var pos = labelArc.centroid(d);
-                var isLeftSide = pos[0] < 0;
-                return isLeftSide ? -radius - 50 : radius + 80;
-            })
-            .attr("y2", function (d) {
-                var pos = labelArc.centroid(d);
-                return pos[1] + 70;
-            });
     });
 }
 
@@ -160,7 +133,7 @@ function gameBarChart(data) {
 
 
         var g = svg1.append("g")
-            .attr("transform", "translate(" + game_width / 2 + ", 70 )")
+            .attr("transform", `translate(${game_width / 1.75}, 70 )`)
             .attr("id", "Bar")
 
         g.append("g")
@@ -202,7 +175,7 @@ function gameBubbleChart(data) {
                 "#a3c5dc", "#5cc4c9", "#409079", "#779079", "#d8b579", "#d89079"]);
 
         const pack = d3.pack()
-            .size([game_width / 2, game_height / 2])
+            .size([game_width / 2, game_height / 1.5])
             .padding(5);
 
         const root = pack(d3.hierarchy({ children: d }).sum(d => d.Global_Sales));
