@@ -18,7 +18,7 @@ const sec_bar_set={
 };
 
 const svg2=d3.select("#chart-area2").append("svg")
-            .attr("width", sec_game_width).attr("height", sec_game_height);
+            .attr("width", sec_game_width).attr("height", 800);
 
 function sec_pie(data)
 {
@@ -40,14 +40,13 @@ d3.csv("vgsales.csv").then(data =>{
     preprocess(data);
     processPie(data);//console.log(SalesCounts);
     processData(data);//console.log(GenreCounts)
-    Genrekeys = Object.keys(GenreCounts);//console.log(keys);
-    //console.log(PublisherCounts);
+    Genrekeys = Object.keys(GenreCounts);//console.log(keys);//console.log(PublisherCounts);
     Publisherkeys = Object.keys(PublisherCounts);//console.log(Publisherkeys);
     PlatformKeys = Object.keys(PlatformCounts);//console.log(PlatformKeys);
     sec_donut(data, Genrekeys);
     sec_pie(data);
-    top5(top5Publisher, PublisherCounts, Publisherkeys);console.log(top5Publisher);
-    top5(top5Platform, PlatformCounts, PlatformKeys);console.log(top5Platform);
+    top5(top5Publisher, PublisherCounts, Publisherkeys);//console.log(top5Publisher);
+    top5(top5Platform, PlatformCounts, PlatformKeys);//console.log(top5Platform);
     sec_bar_pub(data);
     sec_bar_plat(data);
 
@@ -136,6 +135,9 @@ function top5(top5array, data, keys)
         return b.value - a.value;
     });
     top5array.push.apply(top5array, dataArray.slice(0, 5));
+    top5array.sort(function(a, b) {
+        return a.value - b.value;
+    });
 }
 
 
@@ -152,20 +154,20 @@ function sec_donut(data, keys)
     
     donut_legend.append("rect").attr("x", 0)
                 .attr("y", function(d, i){
-                    return i*35;
+                    return i*25;
                 })
-                .attr("width", 30).attr("height", 30)
+                .attr("width", 30).attr("height", 10)
                 .style("fill", function (d, i) {
                     return donut_color[i]
                 })
-                .attr("transform", 'translate(0, '+sec_donut_set.height*2/3+')')
+                .attr("transform", 'translate(0, '+(sec_donut_set.height+20)+')')
 
     donut_legend.append("text").attr("x", 40)
                 .attr("y", function(d, i){
-                    return i*35+20;
+                    return i*25+10;
                 })
                 .style("text-anchor", "start").attr("fill", "#004b62").text((d) => d)
-                .attr("transform", 'translate(0, '+sec_donut_set.height*2/3+')')
+                .attr("transform", 'translate(0, '+(20+sec_donut_set.height)+')')
 
 
     group2.append("text")
@@ -179,7 +181,6 @@ function sec_donut(data, keys)
             .text("Genre")
     
     //pie chart
-    //const radius = Math.min(sec_donut_set.width, sec_donut_set.height) / 2;
     const radius=80;
     const pie = d3.pie();
     const arc = d3.arc()
@@ -199,7 +200,6 @@ function sec_donut(data, keys)
                     })
                     .attr("transform", 'translate('+(sec_donut_set.width/3+100)+', ' + (sec_donut_set.height+150) + ')');
 
-
 }
 
 
@@ -211,11 +211,11 @@ function sec_bar_pub(data)
     var bar_color=['#d89079', '#5cc4c9', '#4090dc', '#d8b3ca', '#d8b579'];
     //X label
     group2.append("text")
-                .attr("x", sec_bar_set.width )
-                .attr("y",sec_bar_set.height+50)
-                .attr("font-size", "20px")
-                //.attr("text-anchor", "middle")
-                .text("Sales").attr("fill", "black")
+                .attr("x", sec_bar_set.width+120 )
+                .attr("y",sec_bar_set.height-30)
+                .attr("font-size", "50px")
+                .text("Sales").attr("fill", "#004b62")
+
     const bar_x = d3.scaleLinear()
                 .domain([0, d3.max(top5Publisher, d=>d.value)])
                 .range([0, sec_bar_set.width*2/3])
@@ -252,11 +252,11 @@ function sec_bar_plat(data)
     var bar_color=['#d89079', '#5cc4c9', '#4090dc', '#d8b3ca', '#d8b579'];
     //X labeld89079
     group2.append("text")
-                .attr("x", sec_bar_set.width )
-                .attr("y",sec_bar_set.height+50)
-                .attr("font-size", "20px")
-                //.attr("text-anchor", "middle")
-                .text("Sales").attr("fill", "black")
+                .attr("x", sec_bar_set.width+120 )
+                .attr("y",sec_bar_set.height-30)
+                .attr("font-size", "50px").attr("fill", "#004b62")
+                .text("Sales")
+
     const bar_x = d3.scaleLinear()
                 .domain([0, d3.max(top5Platform, d=>d.value)])
                 .range([0, sec_bar_set.width*2/3])
@@ -281,8 +281,6 @@ function sec_bar_plat(data)
                 .style("fill", function (d, i) {
                     return bar_color[i];
                 })
-                //.attr("transfrom", 'translate(0, '+sec_bar_set.height+')')
-
 
 }
 
@@ -332,11 +330,14 @@ function sec_pie(data)
                 .outerRadius(radius);
                 
     const arcs = pie(SalesCounts);
-    var thePiet=group2.selectAll("path").data(arcs)
+    var thePie=group2.selectAll("path").data(arcs)
                     .enter().append("path").attr("d", arc)
                     .attr("fill", (d, i) => {
                         return pie_color[i];
                     })
                     .attr("transform", 'translate('+(sec_pie_set.width/3+100)+', 100)');
 
+    var tip = d3.tip().attr('class', 'd3-tip').html((d) => (pie_name[d.index]))
+    group2.call(tip);
+    thePie.on('mouseover', tip.show).on('mouseout', tip.hide);
 }
