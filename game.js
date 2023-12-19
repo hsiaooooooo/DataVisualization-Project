@@ -92,10 +92,10 @@ function gamePieChart(data) {
             .attr("fill", (d) => color(d.data))
             .attr("transform", "translate(0," + 70 + ")")
             .on("mouseenter", function (event, d) {
-                handleMouseEnter.call(this, event, d, arcOver, pieData, g);
+                pieMouseEnter.call(this, event, d, arcOver, pieData, g);
             })
             .on("mouseleave", function (d) {
-                handleMouseLeave.call(this, d, arc, g);
+                pieMouseLeave.call(this, d, arc, g);
             })
     });
 }

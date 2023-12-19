@@ -1,4 +1,4 @@
-function handleMouseEnter(event, d, arcOver, pieData, g) {
+function pieMouseEnter(event, d, arcOver, pieData, g) {
     d3.select(this)
         .attr("stroke", "white")
         .attr("d", arcOver)
@@ -12,7 +12,7 @@ function handleMouseEnter(event, d, arcOver, pieData, g) {
     g.selectAll(".label").filter(":nth-child(" + (index + 1) + ")").style("visibility", "visible");
 }
 
-function handleMouseLeave(d, arc, g) {
+function pieMouseLeave(d, arc, g) {
     d3.select(this)
         .attr("d", arc)
         .attr("stroke", "none");
