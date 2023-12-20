@@ -427,16 +427,16 @@ function sec_pie(data) {
 
     pie_legend.append("rect").attr("x", 0)
         .attr("y", function (d, i) {
-            return i * 35 + sec_game_height/5;
+            return i * 30 + sec_game_height/5;
         })
-        .attr("width", 30).attr("height", 30)
+        .attr("width", 30).attr("height", 10)
         .style("fill", function (d, i) {
             return pie_color[i];
-        })
+        }).attr("transform", 'translate(0, 5)')
 
     pie_legend.append("text").attr("x", 40)
         .attr("y", function (d, i) {
-            return i * 35 + sec_game_height/5 + 20;
+            return i * 30 + sec_game_height/5 + 20;
         })
         .style("font-size", `${sec_game_width*0.02}`)
         .style("text-anchor", "start").attr("fill", "#004b62").text((d) => d)
