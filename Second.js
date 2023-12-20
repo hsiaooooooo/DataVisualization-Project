@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 //console.log(year);
                 preprocess(data);
                 let filteredData = filterYear(data, year);
-                //console.log(filteredData);
+                console.log(filteredData);
                 var newGenreCounts={};
                 var newGenrekeys;
                 var newPublisherCounts = {};
@@ -59,8 +59,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 const newtop5Publisher=[];
                 const newtop5Platform=[];
 
-                top5(newtop5Publisher, newPublisherCounts, newPublisherkeys);
-                updatebar(Platform_bar_rects, newtop5Platform, plat_bar_x, plat_bar_y)
+                top5(newtop5Platform, newPlatformCounts, newPlatformKeys);//console.log(newtop5Platform);
+                top5(newtop5Publisher, newPublisherCounts, newPublisherkeys);console.log(newtop5Platform);
+                updatebar(Platform_bar_rects, newtop5Platform, plat_originalaxis, plat_originalaxisy)
+                updatebar(pub_bar_rects, newtop5Publisher, pub_originalaxis, pub_originalaxisy)
                 
 
 
@@ -307,6 +309,9 @@ function updateDonut(GenreCounts, keys)
 }
 
 var pub_bar_rects;
+var pub_originalaxis;
+var pub_originalaxisy;
+
 function sec_bar_pub(data)
 {
     const group2=svg2.append('g')
@@ -323,14 +328,14 @@ function sec_bar_pub(data)
                 .domain([0, d3.max(top5Publisher, d=>d.value)])
                 .range([0, sec_bar_set.width*2/3])
     const bar_xAxisCall = d3.axisBottom(bar_x)
-    group2.append("g").call(bar_xAxisCall)
+    pub_originalaxis=group2.append("g").call(bar_xAxisCall)
                 .attr("transform", 'translate('+sec_bar_set.width*99/100+', '+sec_bar_set.height*2/3+')')
     // Y label
     const bar_y = d3.scaleBand()
                 .domain(top5Publisher.map(d=>d.name))
                 .range([sec_bar_set.height*2/3, 0])
     const bar_yAxisCall = d3.axisLeft(bar_y).ticks(10)
-    group2.append("g").call(bar_yAxisCall)
+    pub_originalaxisy=group2.append("g").call(bar_yAxisCall)
                 .attr("transform", 'translate('+sec_bar_set.width*99/100+', '+0+')')
 
     pub_bar_rects=group2.append("g").selectAll("rect")
@@ -347,8 +352,9 @@ function sec_bar_pub(data)
 
 }
 var Platform_bar_rects
-var plat_bar_y;
-var plat_bar_x;
+var plat_originalaxis;
+var plat_originalaxisy;
+
 function sec_bar_plat(data)
 {
     const group2=svg2.append('g').attr("transform", 'translate('+0+', '+(sec_bar_set.height)+')')
@@ -361,18 +367,18 @@ function sec_bar_plat(data)
                 .attr("font-size", "50px").attr("fill", "#004b62")
                 .text("Sales")
 
-    plat_bar_x = d3.scaleLinear()
+    var plat_bar_x = d3.scaleLinear()
                 .domain([0, d3.max(top5Platform, d=>d.value)])
                 .range([0, sec_bar_set.width*2/3])
     const bar_xAxisCall = d3.axisBottom(plat_bar_x)
-    group2.append("g").call(bar_xAxisCall)
+    plat_originalaxis=group2.append("g").call(bar_xAxisCall)
                 .attr("transform", 'translate('+sec_bar_set.width*99/100+', '+sec_bar_set.height*2/3+')')
     // Y label
-    plat_bar_y = d3.scaleBand()
+    var plat_bar_y = d3.scaleBand()
                 .domain(top5Platform.map(d=>d.name))
                 .range([sec_bar_set.height*2/3, 0])
-    const bar_yAxisCall = d3.axisLeft(plat_bar_y).ticks(10)
-    group2.append("g").call(bar_yAxisCall)
+    const bar_yAxisCall = d3.axisLeft(plat_bar_y)//.ticks(10)
+    plat_originalaxisy=group2.append("g").call(bar_yAxisCall)
                 .attr("transform", 'translate('+sec_bar_set.width*99/100+', '+0+')')
 
     Platform_bar_rects=group2.append("g").selectAll("rect")
@@ -388,10 +394,21 @@ function sec_bar_plat(data)
 
 }
 
-function updatebar(bar, top5array, bar_x, bar_y)
+function updatebar(bar, top5array, originalaxis, originalaxisy)
 {
     //console.log("A")
-    bar.data(top5array).transition().duration(1000).attr("y", d => bar_y(d.name)).attr("width", d=> bar_x(d.value))
+    const newbar_x = d3.scaleLinear()
+                .domain([0, d3.max(top5array, d=>d.value)])
+                .range([0, sec_bar_set.width*2/3])
+    const bar_xAxisCall = d3.axisBottom(newbar_x)
+    var newbar_y = d3.scaleBand()
+                .domain(top5array.map(d=>d.name))
+                .range([sec_bar_set.height*2/3, 0])
+    const bar_yAxisCall = d3.axisLeft(newbar_y)//.ticks(10)
+    bar.exit().remove();
+    bar.data(top5array).transition().duration(1000).attr("y", d => newbar_y(d.name)).attr("width", d=> newbar_x(d.value))
+    originalaxis.transition().duration(1000).call(bar_xAxisCall)
+    originalaxisy.transition().duration(1000).call(bar_yAxisCall)
 }
 
 function sec_pie(data)
