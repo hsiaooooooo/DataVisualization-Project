@@ -219,7 +219,7 @@ function gameBubbleChart(data) {
         .on("click", handleClick);
 
     node.append("circle")
-        .attr("fill-opacity", 0.7)
+        .attr("fill-opacity", 1)
         .attr("fill", d => color(d.data.Genre))
         .attr("r", d => d.r)
 
