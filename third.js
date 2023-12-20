@@ -178,6 +178,9 @@ function updateline(NAdata, EUdata, JPdata, Otherdata, Globaldata)
     const line_yAxisCall = d3.axisLeft(newline_y).ticks(10)
     //originalaxis=group3.append("g").call(line_yAxisCall)//.attr("transform", 'translate('+100+', '+(0)+')')
     line_originalaxis.transition().duration(1000).call(line_yAxisCall)
+    line_originalaxis.selectAll("text")
+    .attr("transform", "rotate(-40)").attr("fill", "#004b62").attr("font-size", "15px")
+    .style("text-anchor", "end");
 
     //console.log(NAdata)
 
