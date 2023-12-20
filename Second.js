@@ -24,6 +24,7 @@ svg2.append("text")
     .attr("x", game_width / 2)
     .attr("y", game_height * 0.04)
     .attr("text-anchor", "middle")
+    .attr("id","Second_title")
     .style("font-size", "30px")
     .style("font-weight", "bold")
     .style("font-family", "Roboto Mono")
@@ -67,6 +68,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 updatePie(newSalesCounts);
                 const newtop5Publisher = [];
                 const newtop5Platform = [];
+
+                d3.selectAll("#Second_title").text("Comprehensive Analysis of Game Sales in " + year)
 
                 top5(newtop5Platform, newPlatformCounts, newPlatformKeys);//console.log(newtop5Platform);
                 top5(newtop5Publisher, newPublisherCounts, newPublisherkeys); //console.log(newtop5Platform);
