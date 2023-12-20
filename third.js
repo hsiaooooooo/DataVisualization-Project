@@ -19,9 +19,11 @@ var jpline;
 var otherline;
 var globalline;
 var selectGenre;
-const linee = d3.line()
-        .x((d, i) => line_x(i+1980))
-        .y(d => line_y(d));
+
+var line_x = d3.scaleLinear()
+        .domain([1980, 2016])
+        .range([0, line.width-80])
+var originalaxis;
 
 document.addEventListener('DOMContentLoaded', function () {
     var startYear = 0;
@@ -38,12 +40,13 @@ document.addEventListener('DOMContentLoaded', function () {
             
         option.addEventListener('click', function () {
             var selectedYear = this.textContent; // Retrieve the selected value
-            //console.log('Selected Year:', selectedYear);
+            console.log('Selected Year:', selectedYear);
             d3.csv("vgsales.csv").then(data =>{
                 //console.log(data)
                 preprocess(data);//console.log(data)
-                selectGenre=name[selectedYear];console.log(selectGenre);
-                processLineUpdate(data, selectGenre)
+                selectGenre=selectedYear;//console.log(selectGenre);
+                processLineUpdate(data, selectGenre);console.log(NAdata)
+                updateline(NAdata, EUdata, JPdata, Otherdata, Globaldata)
                 
 
 
@@ -61,6 +64,7 @@ document.addEventListener('DOMContentLoaded', function () {
     
 });
 
+
 d3.csv("vgsales.csv").then(data =>{
     preprocess(data);//console.log(data)
     processLine(data);//console.log(Globaldata)
@@ -73,9 +77,9 @@ d3.csv("vgsales.csv").then(data =>{
                 .attr("font-size", "50px").attr("fill", "#004b62")
                 .text("Year").attr("transform", 'translate('+0+', '+(30)+')')
 
-    var line_x = d3.scaleLinear()
-                .domain([1980, 2016])
-                .range([0, line.width-80])
+    // var line_x = d3.scaleLinear()
+    //             .domain([1980, 2016])
+    //             .range([0, line.width-80])
     const line_xAxisCall = d3.axisBottom(line_x).ticks(37)
     plat_originalaxis=group3.append("g").call(line_xAxisCall)
                 .attr("transform", 'translate('+0+', '+(line.height-80)+')')
@@ -87,11 +91,11 @@ d3.csv("vgsales.csv").then(data =>{
                     .attr("text-anchor", "middle")
                     .attr("transform", "rotate(-90)")
                     .text("Count").attr("fill", "black")
-    const line_y = d3.scaleLinear()
-                    .domain([0, d3.max(Globaldata, d=>d)])
-                    .range([line.height-80, 0])
+    const line_y = d3.scaleLinear()//.domain([0, 900])
+                     .domain([0, d3.max(Globaldata, d=>d)])
+                     .range([line.height-80, 0])
     const line_yAxisCall = d3.axisLeft(line_y).ticks(10)
-    group3.append("g").call(line_yAxisCall)//.attr("transform", 'translate('+100+', '+(0)+')')
+    originalaxis=group3.append("g").call(line_yAxisCall)//.attr("transform", 'translate('+100+', '+(0)+')')
     
     var color=['#d89079', '#5cc4c9', '#4090dc', '#d8b3ca', '#d8b579']
 
@@ -135,9 +139,27 @@ d3.csv("vgsales.csv").then(data =>{
 
 })
 
-function updateline(data)
+function updateline(NAdata, EUdata, JPdata, Otherdata, Globaldata)
 {
-    
+    //console.log("a")
+    const newline_y = d3.scaleLinear()//.domain([0, 900])
+                     .domain([0, d3.max(Globaldata, d=>d)])
+                     .range([line.height-80, 0])
+    const line_yAxisCall = d3.axisLeft(newline_y).ticks(10)
+    //originalaxis=group3.append("g").call(line_yAxisCall)//.attr("transform", 'translate('+100+', '+(0)+')')
+    originalaxis.transition().duration(1000).call(line_yAxisCall)
+
+    //console.log(NAdata)
+
+    const linee = d3.line()
+        .x((d, i) => line_x(i+1980))
+        .y(d => newline_y(d));
+    naline.data([NAdata]).transition().duration(1000).attr('d', linee)
+    euline.data([EUdata]).transition().duration(1000).attr('d', linee)
+    jpline.data([JPdata]).transition().duration(1000).attr('d', linee)
+    otherline.data([Otherdata]).transition().duration(1000).attr('d', linee)
+    globalline.data([Globaldata]).transition().duration(1000).attr('d', linee)
+
 }
 
 
@@ -175,9 +197,10 @@ function processLineUpdate(data, selectedGenre)
     Globaldata.forEach(function(_, i, arr) {
         arr[i] = 0;
     });
+
     data.forEach(d => {
         //console.log(d.Year)
-        if(d.Year>=1980 && d.Year<=2016 && data.Genre==selectedGenre)
+        if(d.Year>=1980 && d.Year<=2016 && d.Genre===selectedGenre)
         {
             NAdata[d.Year-1980]+=d.NA_Sales;
             EUdata[d.Year-1980]+=d.EU_Sales;
