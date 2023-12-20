@@ -68,6 +68,30 @@ d3.csv("vgsales.csv").then(data =>{
     processLine(data);//console.log(Globaldata)
     
     const group3=svg3.append('g').attr("transform", 'translate('+line.width*0.1+', '+ line.height*0.1 +')')
+    var color=['#d89079', '#5cc4c9', '#4090dc', '#d8b3ca', '#d8b579']
+    var line_name=["NA", "EU", "JP", "Other", "Global"]
+    var line_legend = group3.selectAll(".legend").data(line_name)
+        .enter().append("g").attr("class", "legend")
+        .attr("transform", 'translate(50, -300)');
+
+    line_legend.append("rect").attr("x", 0)
+        .attr("y", function (d, i) {
+            return i * 35 + sec_game_height / 3;
+        })
+        .attr("width", 30).attr("height", 10)
+        .style("fill", function (d, i) {
+            return color[i];
+        }).attr("transform", 'translate(0, 5)')
+
+    line_legend.append("text").attr("x", 40)
+        .attr("y", function (d, i) {
+            return i * 35 + sec_game_height / 3 + 20;
+        })
+        .style("font-size", `${sec_game_width * 0.02}`)
+        .style("font-family", "Roboto Mono")
+        .style("text-anchor", "start").attr("fill", "#004b62").text((d) => d)
+
+    
     //x
     group3.append("text")
                 .attr("x", line.width/2 )
@@ -104,7 +128,7 @@ d3.csv("vgsales.csv").then(data =>{
         .attr("transform", "rotate(-40)")
         .style("font-family", "Roboto Mono").attr("font-size", "15px").attr("fill", "#004b62")
         .style("text-anchor", "end");
-    var color=['#d89079', '#5cc4c9', '#4090dc', '#d8b3ca', '#d8b579']
+    
 
     //console.log(NAdata)
 
