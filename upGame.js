@@ -97,7 +97,6 @@ function upGameBar(data) {
 
     bins.transition()
         .duration(1000)
-        // .data(bar)
         .attr("x", d => x(d.region))
         .attr("y", d => y(d.sales))
         .attr("width", x.bandwidth())

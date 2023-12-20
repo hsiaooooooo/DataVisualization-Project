@@ -119,7 +119,7 @@ function gameBarChart(data) {
     var color = ['#d8b579', '#d89079', '#5cc4c9', '#4090dc', '#d8b3ca']
     var sales = salesCount(data).slice(0, 5);
     var bar = [
-        { region: "Global", sales: sales[4]},
+        { region: "Global", sales: sales[4] },
         { region: "NA", sales: sales[0] },
         { region: "EU", sales: sales[1] },
         { region: "JP", sales: sales[2] },
@@ -220,12 +220,20 @@ function gameBubbleChart(data) {
 
     const titleText = g.append("text")
         .attr("x", game_width / 2)
-        .attr("y", 0)
+        .attr("y", 40)
         .attr("id", "game_title")
         .attr("text-anchor", "middle")
         .style("font-family", "Roboto Mono")
         .style("font-size", "30px")
         .text("All games").attr("fill", "#004b62")
+    const rankText = g.append("text")
+        .attr("x", game_width /2)
+        .attr("y", 0)
+        .attr("id", "game_rank")
+        .attr("text-anchor", "middle")
+        .style("font-family", "Roboto Mono")
+        .style("font-size", "30px")
+        .text("Rank 0").attr("fill", "#004b62")
     // .style("font-weight", "bold");
 
     const node = g.selectAll("g")
@@ -241,11 +249,11 @@ function gameBubbleChart(data) {
         .attr("fill", d => color(d.data.Genre))
         .attr("r", d => d.r)
 
-    node.append("text")
-        .attr("text-anchor", "middle")
-        .attr("dy", "0.35em")
-        .style("font-size", "15px")
-        .text(d => d.data.Global_Sales);
+    // node.append("text")
+    //     .attr("text-anchor", "middle")
+    //     .attr("dy", "0.35em")
+    //     .style("font-size", "15px")
+    //     .text(d => d.data.Global_Sales);
 
     node.append("title")
         .text(d => `${d.data.Name}\nGenre: ${d.data.Genre}\nGlobal Sales: ${d.data.Global_Sales}`);
@@ -333,6 +341,8 @@ function gameBubbleChart(data) {
             circle.attr("stroke", null);
             g.selectAll("#game_title")
                 .text("All games")
+            g.selectAll("#game_rank")
+                .text("Rank 0")
         }
         else {
             game = d.data.Name;
@@ -340,6 +350,8 @@ function gameBubbleChart(data) {
             circle.attr("stroke-width", 2)
             g.selectAll("#game_title")
                 .text(game)
+            g.selectAll("#game_rank")
+                .text("Rank " + d.data.Rank)
 
         }
 
