@@ -64,10 +64,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 updatebar(Platform_bar_rects, newtop5Platform, plat_originalaxis, plat_originalaxisy)
                 updatebar(pub_bar_rects, newtop5Publisher, pub_originalaxis, pub_originalaxisy)
 
-
-
-
-
             })
         });
 
@@ -135,7 +131,6 @@ function preprocess(data) {
         d.Global_Sales = Number(d.Global_Sales)
     })
     //)
-    //console.log(data)
 }
 function filterYear(data, year) {
     data.forEach(function (d) {
@@ -271,7 +266,6 @@ function sec_donut(data, keys) {
 
     //pie chart
 
-
     var genre = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     genre.forEach(function (d, i) {
         genre[i] = GenreCounts[keys[i]];
@@ -286,6 +280,7 @@ function sec_donut(data, keys) {
         .attr("transform", 'translate(' + (sec_donut_set.width / 3 + 100) + ', ' + (sec_donut_set.height + 150) + ')');
 
 }
+
 function updateDonut(GenreCounts, keys) {
     var genre = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     genre.forEach(function (d, i) {
@@ -343,8 +338,6 @@ function sec_bar_pub(data) {
         .style("fill", function (d, i) {
             return bar_color[i];
         })
-
-
 }
 var Platform_bar_rects
 var plat_originalaxis;
@@ -434,7 +427,7 @@ function sec_pie(data) {
 
     pie_legend.append("rect").attr("x", 0)
         .attr("y", function (d, i) {
-            return i * 35;
+            return i * 35 + sec_game_height/5;
         })
         .attr("width", 30).attr("height", 30)
         .style("fill", function (d, i) {
@@ -443,8 +436,9 @@ function sec_pie(data) {
 
     pie_legend.append("text").attr("x", 40)
         .attr("y", function (d, i) {
-            return i * 35 + 20;
+            return i * 35 + sec_game_height/5 + 20;
         })
+        .style("font-size", `${sec_game_width*0.02}`)
         .style("text-anchor", "start").attr("fill", "#004b62").text((d) => d)
 
     group2.append("text")
