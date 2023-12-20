@@ -30,7 +30,7 @@ svg1.append("text")
     .style("font-size", "30px")
     .style("font-weight", "bold")
     .style("font-family", "Roboto Mono")
-    .text("Top 100 Games");
+    .text("Top 100 Games").attr("fill", "#004b62");
 
 function salesCount(data) {
     var sales = [0, 0, 0, 0, 0];
