@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 //console.log(year);
                 preprocess(data);
                 let filteredData = filterYear(data, year);
-                console.log(filteredData);
+                //console.log(filteredData);
                 var newGenreCounts = {};
                 var newGenrekeys;
                 var newPublisherCounts = {};
@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const newtop5Platform = [];
 
                 top5(newtop5Platform, newPlatformCounts, newPlatformKeys);//console.log(newtop5Platform);
-                top5(newtop5Publisher, newPublisherCounts, newPublisherkeys); console.log(newtop5Platform);
+                top5(newtop5Publisher, newPublisherCounts, newPublisherkeys); //console.log(newtop5Platform);
                 updatebar(Platform_bar_rects, newtop5Platform, plat_originalaxis, plat_originalaxisy)
                 updatebar(pub_bar_rects, newtop5Publisher, pub_originalaxis, pub_originalaxisy)
 
