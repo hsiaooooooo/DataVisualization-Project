@@ -454,8 +454,11 @@ function updatebar(bar, top5array, originalaxis, originalaxisy) {
     originalaxis.transition().duration(1000).call(bar_xAxisCall)
     originalaxisy.transition().duration(1000).call(bar_yAxisCall)
 
+    originalaxis.selectAll("text")
+    .attr("transform", "rotate(-40)").attr("fill", "#004b62")
+    .style("text-anchor", "end");
     originalaxisy.selectAll("text")
-        .attr("transform", "rotate(-45)")
+        .attr("transform", "rotate(-40)").attr("fill", "#004b62")
         .style("text-anchor", "end");
 }
 
