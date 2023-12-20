@@ -73,28 +73,37 @@ d3.csv("vgsales.csv").then(data =>{
                 .attr("x", line.width/2 )
                 .attr("y", line.height-30)
                 .attr("font-size", "50px").attr("fill", "#004b62")
-    .style("font-family", "Roboto Mono")
-    .text("Year").attr("transform", 'translate('+0+', '+(30)+')')
+        .style("font-family", "Roboto Mono")
+        .text("Year").attr("transform", 'translate('+0+', '+(30)+')')
+    
 
     
     const line_xAxisCall = d3.axisBottom(line_x).ticks(37)
-    group3.append("g").call(line_xAxisCall)
+    
+    var line_xaxis=group3.append("g").call(line_xAxisCall)
                 .attr("transform", 'translate('+0+', '+(line.height-80)+')')
-    //y
+    line_xaxis.selectAll("text")
+        .attr("transform", "rotate(-40)")
+        .style("font-family", "Roboto Mono").attr("font-size", "15px")
+        .style("text-anchor", "end");
+                //y
     group3.append("text")
                     .attr("x", -(line.height / 2))
                     .attr("y", -40)
-                    .attr("font-size", "20px")
+                    .attr("font-size", "40px")
                     .attr("text-anchor", "middle")
                     .attr("transform", "rotate(-90)")
-    .style("font-family", "Roboto Mono")
-    .text("Count").attr("fill", "black")
+                    .style("font-family", "Roboto Mono")
+                    .text("Sales").attr("fill", "#004b62")
     const line_y = d3.scaleLinear()//.domain([0, 900])
                      .domain([0, d3.max(Globaldata, d=>d)])
                      .range([line.height-80, 0])
     const line_yAxisCall = d3.axisLeft(line_y).ticks(10)
     line_originalaxis=group3.append("g").call(line_yAxisCall)//.attr("transform", 'translate('+100+', '+(0)+')')
-    
+    line_originalaxis.selectAll("text")
+        .attr("transform", "rotate(-40)")
+        .style("font-family", "Roboto Mono").attr("font-size", "15px").attr("fill", "#004b62")
+        .style("text-anchor", "end");
     var color=['#d89079', '#5cc4c9', '#4090dc', '#d8b3ca', '#d8b579']
 
     //console.log(NAdata)
