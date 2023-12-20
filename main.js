@@ -9,7 +9,7 @@ function getData(data) {
         d.Other_Sales = Number(d.Other_Sales)
         d.Global_Sales = Number(d.Global_Sales)
     })
-    console.log(data)
+    //console.log(data)
 }
 
 d3.csv("vgsales.csv").then(data => {
