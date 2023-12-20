@@ -72,9 +72,9 @@ d3.csv("vgsales.csv").then(data =>{
     group3.append("text")
                 .attr("x", line.width/2 )
                 .attr("y", line.height-30)
-                .attr("font-size", "50px").attr("fill", "#004b62")
-        .style("font-family", "Roboto Mono")
-        .text("Year").attr("transform", 'translate('+0+', '+(30)+')')
+                .attr("font-size", "50px")
+                .style("font-family", "Roboto Mono").attr("fill", "#004b62")
+                .text("Year").attr("transform", 'translate('+0+', '+(30)+')')
     
 
     
