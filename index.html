@@ -10,15 +10,14 @@
         rel="stylesheet">
 </head>
 
-<body>
     <style>
         .d3-tip {
             line-height: 1;
-            padding: 6px;
-            background: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            background: rgba(71, 104, 196, 0.8);
             color: #fff;
             border-radius: 4px;
-            font-size: 12px;
+            font-size: 20px;
         }
 
         .chart {
@@ -38,12 +37,64 @@
         label {
             margin-top: 10px;
         }
-    </style>
 
-    <div id="chart-area1" class="chart">
-        <!-- <label><input type="checkbox" id="sortCheckbox" >Sort</label> -->
+        /* Dropdown Button */
+        .dropbtn {
+            background-color: #004b62;
+            color: white;
+            padding: 16px;
+            font-size: 16px;
+            border: none;
+        }
+
+        /* The container <div> - needed to position the dropdown content */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        /* Dropdown Content (Hidden by Default) */
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f1f1f1;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        /* Links inside the dropdown */
+        .dropdown-content div {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        /* Change color of dropdown links on hover */
+        .dropdown-content div:hover {background-color: #ddd;}
+
+        /* Show the dropdown menu on hover */
+        .dropdown:hover .dropdown-content {display: block;}
+
+        /* Change the background color of the dropdown button when the dropdown content is shown */
+        .dropdown:hover .dropbtn {background-color: #004b62;}
+    </style>
+</head>
+
+<body style="background-color: #fEF7E1;">
+
+    <div id="chart-area1" class="chart"></div>
+    <div id="chart-area2" class="chart">
+        <div class="dropdown">
+            <button class="dropbtn">Year</button>
+            <div class="dropdown-content" id="yearDropdown">
+                <!-- Options will be added dynamically using JavaScript -->
+            </div>
+        </div>
     </div>
-    <div id="chart-area2" class="chart"></div>
     <div id="second-row-container">
         <div id="chart-area3"></div>
     </div>
@@ -53,9 +104,13 @@
     <script src="d3-tip.js"></script>
 
     <script src="mouseEvents.js""></script>
-    <script src=" game.js"></script>
+    <script src="game.js"></script>
     <script src="upGame.js"></script>
+    <script src="Second.js"></script>
+    <script src="third.js"></script>
     <script src="main.js"></script>
+
+    
 
 </body>
 
