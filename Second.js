@@ -90,6 +90,7 @@ var PlatformCounts = {};
 var PlatformKeys;
 var year; //1980-2016
 var theDonut;
+var pie_arcs;
 const radius = 80;
 const pie = d3.pie();
 const arc = d3.arc()
@@ -390,7 +391,7 @@ function sec_bar_plat(data) {
 function updatebar(bar, top5array, originalaxis, originalaxisy) {
     console.log(top5array)
     tmp = top5array.filter(d => d.name !== "" && d.value !== 0);
-    
+
     const newbar_x = d3.scaleLinear()
         .domain([0, d3.max(top5array, d => d.value) + 3])
         .range([0, sec_bar_set.width * 2 / 3])
@@ -422,6 +423,9 @@ function sec_pie(data) {
     //var pie_color = ["#4090dc", "#a3c5dc", "#5cc4c9", "#409079"]
     var pie_color = ['#d89079', '#5cc4c9', '#4090dc', '#d8b3ca']
     var pie_name = ['NA', 'EU', 'JP', 'Other']
+    var arc = d3.arc().outerRadius(radius).innerRadius(0);
+    var labelArc = d3.arc().outerRadius(radius + 100).innerRadius(radius + 20);
+    var arcOver = d3.arc().outerRadius(radius + 30).innerRadius(0);
 
     //pie legend
     var pie_legend = group2.selectAll(".legend").data(pie_name)
@@ -456,24 +460,61 @@ function sec_pie(data) {
     //pie chart
     //const radius = Math.min(sec_pie_set.width, sec_pie_set.height) / 2;
 
+    pie_arcs = pie(SalesCounts);
 
-    const pie_arcs = pie(SalesCounts);
+    var labels = group2.selectAll("second-pie-label")
+        .data(pie_arcs)
+        .join("text")
+        .attr("class", "second-pie-label")
+        .attr("id", (d, i) => "label-text-" + i) // Assign a unique ID based on the index
+        .attr("transform", function (d) {
+            var pos = labelArc.centroid(d);
+            var isLeftSide = pos[0] < 0;
+            if (isLeftSide) {
+                return `translate(${pos[0] + radius * 3},${pos[1] + 150})`;
+            }
+            else
+                return `translate(${pos[0] + radius * 3.2}, ${pos[1] + 150})`;
+        })
+        .attr("dy", "0.35em")
+        .attr("font-size", "20px")
+        .style("visibility", "hidden")
+        .text(d => `${(d.data / d3.sum(SalesCounts) * 100).toFixed(1)}%`);
+
     thePie = group2.selectAll("path").data(pie_arcs)
         .enter().append("path").attr("d", pie_arc)
         .attr("fill", (d, i) => {
             return pie_color[i];
         })
-        .attr("transform", 'translate(' + (sec_pie_set.width / 3 + 100) + ', 100)');
+        .attr("transform", 'translate(' + (sec_pie_set.width / 3 + 100) + ', 150)')
+        .on("mouseenter", function (event, d) {
+            d3.select(this)
+                .attr("stroke", "white")
+                .attr("d", arcOver)
+                .attr("stroke-width", 4);
+            var index = pie_arcs.indexOf(d);
+            console.log(index);
+            group2.selectAll(".second-pie-label").style("visibility", "hidden");
+            group2.selectAll("#label-text-" + index).style("visibility", "visible");
+        })
+        .on("mouseleave", function (d) {
+            d3.select(this)
+                .attr("d", pie_arc)
+                .attr("stroke", "none");
+            group2.selectAll(".second-pie-label").style("visibility", "hidden");
 
-    var tip = d3.tip().attr('class', 'd3-tip').html((d) => (pie_name[d.index]))
-    group2.call(tip);
-    thePie.on('mouseover', tip.show).on('mouseout', tip.hide);
+        })
+        .each(function (d) {
+            this._current = d;
+        });
+
 }
 
 function updatePie(SalesCounts) {
+    var labelArc = d3.arc().outerRadius(radius + 100).innerRadius(radius + 20);
 
-    const arcs = pie(SalesCounts);
-    thePie.data(arcs);
+    pie_arcs = pie(SalesCounts);
+    thePie.data(pie_arcs);
     thePie.transition()
         .duration(1000)
         .attrTween("d", function (d) {
@@ -483,4 +524,18 @@ function updatePie(SalesCounts) {
                 return pie_arc(interpolate(t));
             };
         });
+
+    let percentage = d3.selectAll(".second-pie-label")
+        .data(pie_arcs)
+    percentage.transition().duration(1000)
+        .attr("transform", function (d) {
+            var pos = labelArc.centroid(d);
+            var isLeftSide = pos[0] < 0;
+            if (isLeftSide) {
+                return `translate(${pos[0] + radius * 3},${pos[1] + 150})`;
+            }
+            else
+                return `translate(${pos[0] + radius * 3.2}, ${pos[1] + 150})`;
+        })
+        .text(d => `${(d.data / d3.sum(SalesCounts) * 100).toFixed(1)}%`)
 }

@@ -15,7 +15,7 @@ const game_bar_config = {
 const game_pie_config = {
     width: game_width / 3,
     height: game_height / 3,
-    radius: Math.min(game_width / 4, game_height / 4) / 2
+    radius: Math.min(game_width / 3.5, game_height / 3.5) / 2
 };
 
 const svg1 = d3.select("#chart-area1")
@@ -25,9 +25,11 @@ const svg1 = d3.select("#chart-area1")
 
 svg1.append("text")
     .attr("x", game_width / 2)
-    .attr("y", 30)
+    .attr("y", game_height * 0.075)
     .attr("text-anchor", "middle")
     .style("font-size", "30px")
+    .style("font-weight", "bold")
+    .style("font-family", "Roboto Mono")
     .text("Top 100 Games");
 
 function salesCount(data) {
@@ -98,10 +100,10 @@ function gamePieChart(data) {
         .attr("fill", (d) => color(d.data))
         .attr("transform", `translate(${-25},${game_height / 8})`)
         .on("mouseenter", function (event, d) {
-            pieMouseEnter.call(this, event, d, arcOver, pieData, g);
+            pieMouseEnter.call(this, event, d, arcOver, pieData, g,"label");
         })
         .on("mouseleave", function (d) {
-            pieMouseLeave.call(this, d, arc, g);
+            pieMouseLeave.call(this, d, arc, g,"label");
         })
         .each(function (d) {
             this._current = d;
@@ -135,7 +137,7 @@ function gamePieChart(data) {
 function gameBarChart(data) {
     data = data.filter(d => d.Rank <= 100);
 
-    var color=['#d8b579', '#5cc4c9', '#4090dc', '#d8b3ca']
+    var color = ['#d8b579', '#5cc4c9', '#4090dc', '#d8b3ca']
     var sales = salesCount(data).slice(0, 4);
     var bar = [
         { region: "NA", sales: sales[0] },
@@ -195,12 +197,10 @@ function gameBarChart(data) {
         .style("fill", function (d, i) {
             return color[i];
         })
-        //.attr("fill", "#097ebe");
+    //.attr("fill", "#097ebe");
 }
 
 function gameBubbleChart(data) {
-    // d = data;
-
     const gameGenre = ["Sports", "Platform", "Racing", "Role-Playing", "Puzzle", "Misc",
         "Shooter", "Simulation", "Action", "Fighting", "Adventure", "Strategy"];
 
@@ -218,7 +218,7 @@ function gameBubbleChart(data) {
 
     const xScale = d3.scalePoint()
         .domain(gameGenre)
-        .range([game_width * 0.15, game_width])
+        .range([game_width * 0.1, game_width])
         .padding(0.5);
 
     const pack = d3.pack()
@@ -269,48 +269,49 @@ function gameBubbleChart(data) {
     const colorLegendRects = colorLegend.selectAll("rect")
         .data(gameGenre)
         .enter().append("rect")
-        .attr("x", (d, i) => i % 6 * game_width*0.1 - game_width * 0.75)
+        .attr("x", (d, i) => i % 6 * game_width * 0.12 - game_width * 0.75)
         .attr("y", (d, i) => {
             if (i < 6) return game_height * 0.65
-            else return game_height * 0.65 + 20
+            else return game_height * 0.65 + game_width * 0.02
         })
-        .attr("width", game_width*0.015)
-        .attr("height", game_width*0.015)
+        .attr("width", game_width * 0.015)
+        .attr("height", game_width * 0.015)
         .attr("fill", d => color(d));
 
     const colorLegendTexts = colorLegend.selectAll("text")
         .data(gameGenre)
         .enter().append("text")
-        .attr("x", (d, i) => i % 6 * 95 - game_width * 0.75 + 20)
+        .attr("x", (d, i) => i % 6 * game_width * 0.12 - game_width * 0.75 + game_width * 0.02)
         .attr("y", (d, i) => {
-            if (i < 6) return game_height * 0.65 + 10
-            else return game_height * 0.65 + 30
+            if (i < 6) return game_height * 0.65 +  game_width * 0.012
+            else return game_height * 0.65 +  game_width * 0.031
         })
         .text(d => d)
         .attr("fill", "#000")
-        .style("font-size", "17px");
+        .style("font-size", `${game_width*0.014}px`);
 
     const sizeLegend = g.append("g")
-        .attr("transform", `translate(${game_width * 0.8},${game_height * 0.4})`)
+        .attr("transform", `translate(${game_width * 0.75},${game_height * 0.42})`)
         .attr("id", "SizeLegend");
 
-    const sizeLegendCircles = sizeLegend.selectAll("circle")
-        .data([10, 20, 30]) 
+    const sizeLegendCircles = sizeLegend.selectAll("legend-circle")
+        .data([10, 20, 30])
         .enter().append("circle")
-        .attr("cx", (d, i) => i * (d+20) + game_width * 0.02)
+        .attr("cx", (d, i) => i * (d + 20) + game_width * 0.02)
         .attr("cy", -50)
         .attr("r", d => d)
         .attr("fill", "none")
-        .attr("stroke", "#000");
+        .attr("stroke", "#000")
+        .attr("stroke-width",`${1.5}`)
 
     const sizeLegendTexts = sizeLegend.selectAll("text")
-        .data([10, 20, 30]) 
+        .data([10, 20, 30])
         .enter().append("text")
-        .attr("x", (d, i) => i * (d+20) + game_width * 0.02-5)
+        .attr("x", (d, i) => i * (d + 20) + game_width * 0.02 - 5)
         .attr("y", 0)
         .text(d => d)
         .attr("fill", "#000")
-        .style("font-size", "12px");
+        .style("font-size", `${game_width*0.014}px`);
 
     function tick() {
         node.attr('transform', function (d) {
@@ -319,7 +320,7 @@ function gameBubbleChart(data) {
     }
 
     function handleClick(event, d) {
-        svg1.selectAll("circle").attr("stroke", null);
+        svg1.selectAll("#game-bubble").select("circle").attr("stroke", null);
 
         const circle = d3.select(this).select("circle");
         const hasStroke = circle.attr("stroke") === "black";
@@ -331,7 +332,6 @@ function gameBubbleChart(data) {
             game = d.data.Name;
             circle.attr("stroke", hasStroke ? null : "black")
             circle.attr("stroke-width", 2)
-
         }
         console.log(data);
 
