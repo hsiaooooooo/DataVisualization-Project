@@ -18,7 +18,48 @@ var euline;
 var jpline;
 var otherline;
 var globalline;
+var selectGenre;
+const linee = d3.line()
+        .x((d, i) => line_x(i+1980))
+        .y(d => line_y(d));
 
+document.addEventListener('DOMContentLoaded', function () {
+    var startYear = 0;
+    var endYear = 11;
+    var name=["Sports", "Platform", "Racing", "Role-Playing", "Puzzle", "Misc", "Shooter", "Simulation", "Action", "Fighting", "Advanture", "Strategy"]
+    var maxDropdownHeight = 200; // Set your desired maximum height in pixels
+            
+    var dropdown = document.getElementById('GenreDropdown');
+            
+                // Generate options dynamically using a loop
+    for (var year = startYear; year <= endYear; year++) {
+        var option = document.createElement('div');
+        option.textContent = name[year];
+            
+        option.addEventListener('click', function () {
+            var selectedYear = this.textContent; // Retrieve the selected value
+            //console.log('Selected Year:', selectedYear);
+            d3.csv("vgsales.csv").then(data =>{
+                //console.log(data)
+                preprocess(data);//console.log(data)
+                selectGenre=name[selectedYear];console.log(selectGenre);
+                processLineUpdate(data, selectGenre)
+                
+
+
+                
+            })
+        });
+            
+        dropdown.appendChild(option);
+    }
+            
+    // Set maximum height and enable scrolling
+    dropdown.style.maxHeight = maxDropdownHeight + 'px';
+    dropdown.style.overflowY = 'auto';
+    
+    
+});
 
 d3.csv("vgsales.csv").then(data =>{
     preprocess(data);//console.log(data)
@@ -92,10 +133,12 @@ d3.csv("vgsales.csv").then(data =>{
         .attr('fill', 'none')
         .attr('stroke', color[4]).attr('stroke-width', 5)
 
-
-
 })
 
+function updateline(data)
+{
+    
+}
 
 
 function processLine(data)
@@ -103,6 +146,38 @@ function processLine(data)
     data.forEach(d => {
         //console.log(d.Year)
         if(d.Year>=1980 && d.Year<=2016)
+        {
+            NAdata[d.Year-1980]+=d.NA_Sales;
+            EUdata[d.Year-1980]+=d.EU_Sales;
+            JPdata[d.Year-1980]+=d.JP_Sales;
+            Otherdata[d.Year-1980]+=d.Other_Sales;
+            Globaldata[d.Year-1980]+=d.Global_Sales;
+        }
+        
+    });
+    //onsole.log(EUdata)
+}
+
+function processLineUpdate(data, selectedGenre)
+{
+    NAdata.forEach(function(_, i, arr) {
+        arr[i] = 0;
+    });
+    EUdata.forEach(function(_, i, arr) {
+        arr[i] = 0;
+    });
+    JPdata.forEach(function(_, i, arr) {
+        arr[i] = 0;
+    });
+    Otherdata.forEach(function(_, i, arr) {
+        arr[i] = 0;
+    });
+    Globaldata.forEach(function(_, i, arr) {
+        arr[i] = 0;
+    });
+    data.forEach(d => {
+        //console.log(d.Year)
+        if(d.Year>=1980 && d.Year<=2016 && data.Genre==selectedGenre)
         {
             NAdata[d.Year-1980]+=d.NA_Sales;
             EUdata[d.Year-1980]+=d.EU_Sales;
