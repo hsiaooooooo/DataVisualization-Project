@@ -109,35 +109,13 @@ function gamePieChart(data) {
             this._current = d;
         });
 
-    // Legends
-    // var legend = g.selectAll(".legend")
-    //     .data(sales_categories)
-    //     .enter()
-    //     .append("g")
-    //     .attr("transform", (d, i) => `translate(${radius * 1.3}, ${game_pie_config.height * 0.8 - (4 - i) * 20})`)
-
-    // legend.append("rect")
-    //     .attr("x", 10)
-    //     .attr("width", 18)
-    //     .attr("height", 18)
-    //     .attr("stroke", "black")
-    //     .attr("stroke-width", 2)
-    //     .style("fill", (d) => color(d))
-    //     .style("stroke-opacity", 0)
-
-    // legend.append("text")
-    //     .attr("x", 40)
-    //     .attr("y", 9)
-    //     .attr("dy", ".35em")
-    //     .style("text-anchor", "start")
-    //     .text((d) => d)
 
 }
 
 function gameBarChart(data) {
     data = data.filter(d => d.Rank <= 100);
 
-    var color = ['#d8b579', '#5cc4c9', '#4090dc', '#d8b3ca']
+    var color = ['#d89079', '#5cc4c9', '#4090dc', '#d8b3ca']
     var sales = salesCount(data).slice(0, 4);
     var bar = [
         { region: "NA", sales: sales[0] },

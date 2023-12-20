@@ -233,7 +233,7 @@ function sec_donut(data, keys) {
     //donut legend
     var donut_legend = group2.selectAll(".legend").data(keys)
         .enter().append("g").attr("class", "legend")
-    .attr("transform", `translate(${0}, ${-sec_donut_set.height*0.1})`);
+        .attr("transform", `translate(${0}, ${-sec_donut_set.height * 0.1})`);
 
     donut_legend.append("rect").attr("x", 0)
         .attr("y", function (d, i) {
@@ -250,20 +250,19 @@ function sec_donut(data, keys) {
             return i * 25 + 10;
         })
         .style("text-anchor", "start").attr("fill", "#004b62").text((d) => d)
-    .style("font-family", "Roboto Mono")
-    .attr("transform", 'translate(0, ' + (20 + sec_donut_set.height) + ')')
+        .style("font-family", "Roboto Mono")
+        .attr("transform", 'translate(0, ' + (20 + sec_donut_set.height) + ')')
 
 
     group2.append("text")
         .attr("x", sec_donut_set.width / 2)
-        .attr("y", sec_donut_set.height - 50)
-        .attr("font-size", "50px")
+        .attr("y", sec_donut_set.height * 0.525)
+        .attr("font-size", "35px")
         .attr("text-anchor", "middle")
-        .attr("font-family", "Century")
         .attr("fill", "#004b62")
-        .attr("transform", `translate(${sec_donut_set.width * 0.001},${sec_donut_set.height * 0.7})`)
+        .attr("transform", `translate(${sec_donut_set.width * 0.09},${sec_donut_set.height * 0.8})`)
         .text("Genre")
-    	.style("font-family", "Roboto Mono")
+        .style("font-family", "Roboto Mono")
 
     //pie chart
 
@@ -278,7 +277,7 @@ function sec_donut(data, keys) {
         .attr("fill", (d, i) => {
             return donut_color[i];
         })
-        .attr("transform", 'translate(' + (sec_donut_set.width  / 2 ) + ', ' + (sec_donut_set.height*1.2) + ')');
+        .attr("transform", 'translate(' + (sec_donut_set.width / 1.7) + ', ' + (sec_donut_set.height * 1.3) + ')');
 
 }
 
@@ -305,29 +304,39 @@ var pub_originalaxis;
 var pub_originalaxisy;
 
 function sec_bar_pub(data) {
-    const group2 = svg2.append('g').attr("transform", 'translate(' + sec_game_width / 2 + ', ' + 0 + ')')
+    const group2 = svg2.append('g').attr("transform", 'translate(' + sec_pie_set.width * 1.1 + ', ' + 0 + ')')
 
     var bar_color = ['#d89079', '#5cc4c9', '#4090dc', '#d8b3ca', '#d8b579'];
     //X label
     group2.append("text")
-        .attr("x", sec_bar_set.width + 120)
-        .attr("y", sec_bar_set.height - 30)
-        .attr("font-size", "50px")
-    .style("font-family", "Roboto Mono")
-    .text("Sales").attr("fill", "#004b62")
+        .attr("x", sec_bar_set.width / 4)
+        .attr("y", sec_bar_set.height * 0.84)
+        .attr("font-size", "22px")
+        .style("font-family", "Roboto Mono")
+        .text("Global Sales").attr("fill", "#004b62")
 
     const bar_x = d3.scaleLinear()
         .domain([0, d3.max(top5Publisher, d => d.value) + 3])
-        .range([0, sec_bar_set.width * 2 / 3])
+        .range([0, sec_bar_set.width * 4 / 5])
     const bar_xAxisCall = d3.axisBottom(bar_x)
-    pub_originalaxis = group2.append("g").call(bar_xAxisCall)
-        .attr("transform", 'translate(' + 0 + ', ' + (sec_bar_set.height * 2 / 3) + ')')
+    pub_originalaxis = group2.append("g")
+        .style("font-size", "18px")
+        .call(bar_xAxisCall)
+        .attr("transform", 'translate(' + sec_bar_set.width * 0 + ', ' + (sec_bar_set.height * 2 / 3) + ')')
+    pub_originalaxis.selectAll("text")
+        .attr("transform", "rotate(-40)")
+        .style("font-family", "Roboto Mono")
+        .style("text-anchor", "end");
     // Y label
     const bar_y = d3.scaleBand()
         .domain(top5Publisher.map(d => d.name))
         .range([sec_bar_set.height * 2 / 3, 0])
     const bar_yAxisCall = d3.axisLeft(bar_y).ticks(10)
-    pub_originalaxisy = group2.append("g").call(bar_yAxisCall)
+    pub_originalaxisy = group2.append("g").call(bar_yAxisCall).style("font-size", `${17}px`)
+    pub_originalaxisy.selectAll("text")
+        .attr("transform", "rotate(-40)")
+        .style("font-family", "Roboto Mono")
+        .style("text-anchor", "end");
     //.attr("transform", 'translate(' + sec_bar_set.width * 99 / 100 + ', ' + 0 + ')')
 
     pub_bar_rects = group2.append("g").selectAll("rect")
@@ -346,30 +355,43 @@ var plat_originalaxis;
 var plat_originalaxisy;
 
 function sec_bar_plat(data) {
-    const group2 = svg2.append('g').attr("transform", 'translate(' + 0 + ', ' + (sec_bar_set.height) + ')')
+    const group2 = svg2.append('g').attr("transform", 'translate(' + sec_donut_set.width * 0.1 + ', ' + (sec_bar_set.height * 0.9) + ')')
 
     var bar_color = ['#d89079', '#5cc4c9', '#4090dc', '#d8b3ca', '#d8b579'];
     //X labeld89079
     group2.append("text")
-        .attr("x", sec_bar_set.width + 120)
-        .attr("y", sec_bar_set.height - 30)
-        .attr("font-size", "50px").attr("fill", "#004b62")
-    .style("font-family", "Roboto Mono")
-    .text("Sales")
+        .attr("x", sec_bar_set.width * 1.25)
+        .attr("y", sec_bar_set.height * 0.8)
+        .attr("font-size", "22px").attr("fill", "#004b62")
+        .style("font-family", "Roboto Mono")
+        .text("Global Sales")
 
     var plat_bar_x = d3.scaleLinear()
         .domain([0, d3.max(top5Platform, d => d.value) + 3])
-        .range([0, sec_bar_set.width * 2 / 3])
+        .range([0, sec_bar_set.width * 4 / 5])
     const bar_xAxisCall = d3.axisBottom(plat_bar_x)
-    plat_originalaxis = group2.append("g").call(bar_xAxisCall)
+    plat_originalaxis = group2.append("g")
+        .style("font-size", "17px")
+        .call(bar_xAxisCall)
         .attr("transform", 'translate(' + sec_bar_set.width * 99 / 100 + ', ' + sec_bar_set.height * 2 / 3 + ')')
+    plat_originalaxis.selectAll("text")
+        .attr("transform", "rotate(-40)")
+        .style("font-family", "Roboto Mono")
+        .style("text-anchor", "end");
+
     // Y label
     var plat_bar_y = d3.scaleBand()
         .domain(top5Platform.map(d => d.name))
         .range([sec_bar_set.height * 2 / 3, 0])
     const bar_yAxisCall = d3.axisLeft(plat_bar_y)//.ticks(10)
-    plat_originalaxisy = group2.append("g").call(bar_yAxisCall)
+    plat_originalaxisy = group2.append("g")
+        .style("font-size", "17px")
+        .style("font-family", "Roboto Mono")
+        .call(bar_yAxisCall)
         .attr("transform", 'translate(' + sec_bar_set.width * 99 / 100 + ', ' + 0 + ')')
+    plat_originalaxisy.selectAll("text")
+        .attr("transform", "rotate(-40)")
+        .style("text-anchor", "end");
 
     Platform_bar_rects = group2.append("g").selectAll("rect")
         .data(top5Platform)
@@ -412,6 +434,10 @@ function updatebar(bar, top5array, originalaxis, originalaxisy) {
         .attr("width", d => newbar_x(d.value));
     originalaxis.transition().duration(1000).call(bar_xAxisCall)
     originalaxisy.transition().duration(1000).call(bar_yAxisCall)
+
+    originalaxisy.selectAll("text")
+        .attr("transform", "rotate(-45)")
+        .style("text-anchor", "end");
 }
 
 function sec_pie(data) {
@@ -442,20 +468,19 @@ function sec_pie(data) {
             return i * 35 + sec_game_height / 5 + 20;
         })
         .style("font-size", `${sec_game_width * 0.02}`)
-	    .style("font-family", "Roboto Mono")
-
+        .style("font-family", "Roboto Mono")
         .style("text-anchor", "start").attr("fill", "#004b62").text((d) => d)
 
     group2.append("text")
         .attr("x", sec_pie_set.width / 2)
         .attr("y", sec_pie_set.height - 50)
-        .attr("font-size", "50px")
+        .attr("font-size", "35px")
         .attr("text-anchor", "middle")
         .attr("font-family", "Century")
         .attr("fill", "#004b62")
-        .attr("transform", 'translate(' + sec_pie_set.width / 18 + ', ' + - sec_pie_set.height * 0.25 + ')')
+        .attr("transform", 'translate(' + sec_pie_set.width / 18 + ', ' + - sec_pie_set.height * 0.15 + ')')
         .text("Sales Ratio")
-	    .style("font-family", "Roboto Mono")
+        .style("font-family", "Roboto Mono")
 
 
     //pie chart
