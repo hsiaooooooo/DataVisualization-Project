@@ -251,7 +251,8 @@ function sec_donut(data, keys) {
             return i * 25 + 10;
         })
         .style("text-anchor", "start").attr("fill", "#004b62").text((d) => d)
-        .attr("transform", 'translate(0, ' + (20 + sec_donut_set.height) + ')')
+    .style("font-family", "Roboto Mono")
+    .attr("transform", 'translate(0, ' + (20 + sec_donut_set.height) + ')')
 
 
     group2.append("text")
@@ -313,7 +314,8 @@ function sec_bar_pub(data) {
         .attr("x", sec_bar_set.width + 120)
         .attr("y", sec_bar_set.height - 30)
         .attr("font-size", "50px")
-        .text("Sales").attr("fill", "#004b62")
+    .style("font-family", "Roboto Mono")
+    .text("Sales").attr("fill", "#004b62")
 
     const bar_x = d3.scaleLinear()
         .domain([0, d3.max(top5Publisher, d => d.value) + 3])
@@ -353,7 +355,8 @@ function sec_bar_plat(data) {
         .attr("x", sec_bar_set.width + 120)
         .attr("y", sec_bar_set.height - 30)
         .attr("font-size", "50px").attr("fill", "#004b62")
-        .text("Sales")
+    .style("font-family", "Roboto Mono")
+    .text("Sales")
 
     var plat_bar_x = d3.scaleLinear()
         .domain([0, d3.max(top5Platform, d => d.value) + 3])
@@ -439,6 +442,8 @@ function sec_pie(data) {
         .attr("y", function (d, i) {
             return i * 30 + sec_game_height/5 + 20;
         })
+    .style("font-family", "Roboto Mono")
+
         .style("font-size", `${sec_game_width*0.02}`)
         .style("text-anchor", "start").attr("fill", "#004b62").text((d) => d)
 
