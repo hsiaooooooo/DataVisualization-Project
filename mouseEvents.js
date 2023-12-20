@@ -2,7 +2,7 @@ function pieMouseEnter(event, d, arcOver, pieData, g) {
     d3.select(this)
         .attr("stroke", "white")
         .attr("d", arcOver)
-        .attr("stroke-width", 6);
+        .attr("stroke-width", 4);
 
     var index = pieData.indexOf(d);
     console.log(index);

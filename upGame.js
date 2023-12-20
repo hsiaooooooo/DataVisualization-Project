@@ -38,10 +38,10 @@ function upGamePie(data) {
             var pos = labelArc.centroid(d);
             var isLeftSide = pos[0] < 0;
             if (isLeftSide) {
-                return `translate(${pos[0] - radius * 0.075},${pos[1] + game_height / 8})`;
+                return `translate(${pos[0] - radius * 0.075 - 25},${pos[1] + game_height / 8})`;
             }
             else
-                return `translate(${pos[0] - radius * 0.2}, ${pos[1] + game_height / 8})`;
+                return `translate(${pos[0] - radius * 0.2 - 25}, ${pos[1] + game_height / 8})`;
         })
         .attr("class", "label")
         .text(d => `${(d.data / d3.sum(sales) * 100).toFixed(1)}%`)
@@ -73,7 +73,7 @@ function upGameBar(data) {
 
     var y = d3.scaleLinear()
         .domain([0, d3.max(sales) + 5])
-        .range([game_bar_config.height*0.9, game_bar_config.height*0.1]);
+        .range([game_bar_config.height * 0.9, game_bar_config.height * 0.1]);
 
     const yAxis_new = d3.axisLeft(y)
         .ticks(8)
@@ -111,4 +111,32 @@ function processNewData(data) {
     }
     // console.log(data);
     return data;
+}
+
+function sortBubbles(data, simulation) {
+    const gameGenre = ["Sports", "Platform", "Racing", "Role-Playing", "Puzzle", "Misc",
+        "Shooter", "Simulation", "Action", "Fighting", "Adventure", "Strategy"];
+
+    data.sort((a, b) => {
+        const genreA = gameGenre.indexOf(a.Genre);
+        const genreB = gameGenre.indexOf(b.Genre);
+        return genreA - genreB;
+    });
+
+    var g = d3.selectAll("#Bubble")
+        .attr("transform", `translate(${0},${game_height / 2})`)
+
+    const pack = d3.pack()
+        .size([350, 400])
+        .padding(5);
+    const xScale = d3.scalePoint()
+        .domain(gameGenre)
+        .range([game_width * 0.1, game_width * 1.1])
+        .padding(0.5);
+
+    simulation.force('x', d3.forceX().x(d => xScale(d.data.Genre)));
+
+    simulation.nodes(pack(d3.hierarchy({ children: data }).sum(d => d.Global_Sales)).leaves())
+        .alpha(1)
+        .restart();
 }
