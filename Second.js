@@ -262,7 +262,8 @@ function sec_donut(data, keys) {
         .attr("font-family", "Century")
         .attr("fill", "#004b62")
         .attr("transform", 'translate(' + (sec_donut_set.width / 40) + ', ' + (sec_donut_set.height + 30) + ')')
-        .text("Genre")
+    .style("font-family", "Roboto Mono")
+    .text("Genre")
 
     //pie chart
 
@@ -449,7 +450,8 @@ function sec_pie(data) {
         .attr("font-family", "Century")
         .attr("fill", "#004b62")
         .attr("transform", 'translate(' + sec_pie_set.width / 12 + ', ' + (-10) + ')')
-        .text("Sales Ratio")
+    .style("font-family", "Roboto Mono")
+    .text("Sales Ratio")
 
     //pie chart
     //const radius = Math.min(sec_pie_set.width, sec_pie_set.height) / 2;
