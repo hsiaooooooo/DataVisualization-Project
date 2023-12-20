@@ -49,7 +49,7 @@ function gamePieChart(data) {
 
     var color = d3.scaleOrdinal()
         .domain(sales_categories)
-        .range(["#097ebe", "#ff7c2a", "#0c9903", "#cd2701"]);
+        .range(['#d89079', '#5cc4c9', '#4090dc', '#d8b3ca']);
 
     var pie = d3.pie()
         .sort(null)
@@ -135,6 +135,7 @@ function gamePieChart(data) {
 function gameBarChart(data) {
     data = data.filter(d => d.Rank <= 100);
 
+    var color=['#d8b579', '#5cc4c9', '#4090dc', '#d8b3ca']
     var sales = salesCount(data).slice(0, 4);
     var bar = [
         { region: "NA", sales: sales[0] },
@@ -191,7 +192,10 @@ function gameBarChart(data) {
         .attr("width", x.bandwidth())
         .attr("height", d => game_bar_config.height * 0.9 - y(d.sales))
         .attr("transform", `translate( 0, ${game_bar_config.height * 0.1} )`)
-        .attr("fill", "#097ebe");
+        .style("fill", function (d, i) {
+            return color[i];
+        })
+        //.attr("fill", "#097ebe");
 }
 
 function gameBubbleChart(data) {
