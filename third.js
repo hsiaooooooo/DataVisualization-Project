@@ -85,7 +85,7 @@ d3.csv("vgsales.csv").then(data =>{
     line_xaxis.selectAll("text")
         .attr("transform", "rotate(-40)")
         .style("font-family", "Roboto Mono").attr("font-size", "15px")
-        .style("text-anchor", "end");
+        .style("text-anchor", "end").attr("fill", "#004b62");
                 //y
     group3.append("text")
                     .attr("x", -(line.height / 2))

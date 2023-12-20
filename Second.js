@@ -335,7 +335,7 @@ function sec_bar_pub(data) {
         .attr("transform", 'translate(' + sec_bar_set.width * 0 + ', ' + (sec_bar_set.height * 0.85) + ')')
     pub_originalaxis.selectAll("text")
         .attr("transform", "rotate(-40)")
-        .style("font-family", "Roboto Mono")
+        .style("font-family", "Roboto Mono").attr("fill", "#004b62")
         .style("text-anchor", "end");
     // Y label
     const bar_y = d3.scaleBand()
@@ -349,7 +349,7 @@ function sec_bar_pub(data) {
 
     pub_originalaxisy.selectAll("text")
         .attr("transform", "rotate(-40)")
-        .style("font-family", "Roboto Mono")
+        .style("font-family", "Roboto Mono").attr("fill", "#004b62")
         .style("text-anchor", "end");
     //.attr("transform", 'translate(' + sec_bar_set.width * 99 / 100 + ', ' + 0 + ')')
 
@@ -391,7 +391,7 @@ function sec_bar_plat(data) {
         .attr("transform", 'translate(' + sec_bar_set.width * 99 / 100 + ', ' + sec_bar_set.height / 1.2 + ')')
     plat_originalaxis.selectAll("text")
         .attr("transform", "rotate(-40)")
-        .style("font-family", "Roboto Mono")
+        .style("font-family", "Roboto Mono").attr("fill", "#004b62")
         .style("text-anchor", "end");
 
     // Y label
@@ -405,7 +405,7 @@ function sec_bar_plat(data) {
         .call(bar_yAxisCall)
         .attr("transform", 'translate(' + sec_bar_set.width * 99 / 100 + ', ' + sec_bar_set.height / 6 + ')')
     plat_originalaxisy.selectAll("text")
-        .attr("transform", "rotate(-40)")
+        .attr("transform", "rotate(-40)").attr("fill", "#004b62")
         .style("text-anchor", "end");
 
     Platform_bar_rects = group2.append("g").selectAll("rect")
