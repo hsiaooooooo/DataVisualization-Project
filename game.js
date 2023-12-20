@@ -269,13 +269,13 @@ function gameBubbleChart(data) {
     const colorLegendRects = colorLegend.selectAll("rect")
         .data(gameGenre)
         .enter().append("rect")
-        .attr("x", (d, i) => i % 6 * 95 - game_width * 0.75)
+        .attr("x", (d, i) => i % 6 * game_width*0.1 - game_width * 0.75)
         .attr("y", (d, i) => {
             if (i < 6) return game_height * 0.65
             else return game_height * 0.65 + 20
         })
-        .attr("width", 15)
-        .attr("height", 15)
+        .attr("width", game_width*0.015)
+        .attr("height", game_width*0.015)
         .attr("fill", d => color(d));
 
     const colorLegendTexts = colorLegend.selectAll("text")
@@ -288,7 +288,7 @@ function gameBubbleChart(data) {
         })
         .text(d => d)
         .attr("fill", "#000")
-        .style("font-size", "12px");
+        .style("font-size", "17px");
 
     const sizeLegend = g.append("g")
         .attr("transform", `translate(${game_width * 0.8},${game_height * 0.4})`)
