@@ -27,10 +27,10 @@ svg1.append("text")
     .attr("x", game_width / 2)
     .attr("y", game_height * 0.075)
     .attr("text-anchor", "middle")
-    .style("font-size", "30px")
-    .style("font-weight", "bold")
+    .style("font-size", "40px")
     .style("font-family", "Roboto Mono")
-    .text("Top 100 Games").attr("fill", "#004b62");
+    .text("Top 100 Games").attr("fill", "#004b62")
+    .style("font-weight", "bold")
 
 function salesCount(data) {
     var sales = [0, 0, 0, 0, 0];
@@ -100,10 +100,10 @@ function gamePieChart(data) {
         .attr("fill", (d) => color(d.data))
         .attr("transform", `translate(${-25},${game_height / 8})`)
         .on("mouseenter", function (event, d) {
-            pieMouseEnter.call(this, event, d, arcOver, pieData, g,"label");
+            pieMouseEnter.call(this, event, d, arcOver, pieData, g, "label");
         })
         .on("mouseleave", function (d) {
-            pieMouseLeave.call(this, d, arc, g,"label");
+            pieMouseLeave.call(this, d, arc, g, "label");
         })
         .each(function (d) {
             this._current = d;
@@ -115,15 +115,21 @@ function gamePieChart(data) {
 function gameBarChart(data) {
     data = data.filter(d => d.Rank <= 100);
 
-    var color = ['#d89079', '#5cc4c9', '#4090dc', '#d8b3ca']
-    var sales = salesCount(data).slice(0, 4);
+
+    var color = ['#d8b579', '#d89079', '#5cc4c9', '#4090dc', '#d8b3ca']
+    var sales = salesCount(data).slice(0, 5);
     var bar = [
+        { region: "Global", sales: sales[4]},
         { region: "NA", sales: sales[0] },
         { region: "EU", sales: sales[1] },
         { region: "JP", sales: sales[2] },
-        { region: "Other", sales: sales[3] },
-        // { region: "Global", sales: sales[4] }
+        { region: "Other", sales: sales[3] }
     ]
+
+    const regions = bar.map(d => d.region);
+    const colorScale = d3.scaleOrdinal()
+        .domain(regions)
+        .range(['#d8b579', '#d89079', '#5cc4c9', '#4090dc', '#d8b3ca']);
 
     bar.sort(function (b, a) {
         return a.sales - b.sales;
@@ -172,9 +178,11 @@ function gameBarChart(data) {
         .attr("width", x.bandwidth())
         .attr("height", d => game_bar_config.height * 0.9 - y(d.sales))
         .attr("transform", `translate( 0, ${game_bar_config.height * 0.1} )`)
-        .style("fill", function (d, i) {
-            return color[i];
-        })
+        // .style("fill", function (d, i) {
+        // return color[i];
+        // })
+        .style("fill", d => colorScale(d.region));
+
     //.attr("fill", "#097ebe");
 }
 
@@ -210,6 +218,16 @@ function gameBubbleChart(data) {
         // .attr("transform", `translate(${game_width / 4},${game_height / 2})`)
         .attr("id", "Bubble")
 
+    const titleText = g.append("text")
+        .attr("x", game_width / 2)
+        .attr("y", 0)
+        .attr("id", "game_title")
+        .attr("text-anchor", "middle")
+        .style("font-family", "Roboto Mono")
+        .style("font-size", "30px")
+        .text("All games").attr("fill", "#004b62")
+    // .style("font-weight", "bold");
+
     const node = g.selectAll("g")
         .data(root.leaves())
         .join("g")
@@ -222,6 +240,12 @@ function gameBubbleChart(data) {
         .attr("fill-opacity", 1)
         .attr("fill", d => color(d.data.Genre))
         .attr("r", d => d.r)
+
+    node.append("text")
+        .attr("text-anchor", "middle")
+        .attr("dy", "0.35em")
+        .style("font-size", "15px")
+        .text(d => d.data.Global_Sales);
 
     node.append("title")
         .text(d => `${d.data.Name}\nGenre: ${d.data.Genre}\nGlobal Sales: ${d.data.Global_Sales}`);
@@ -247,7 +271,7 @@ function gameBubbleChart(data) {
     const colorLegendRects = colorLegend.selectAll("rect")
         .data(gameGenre)
         .enter().append("rect")
-        .attr("x", (d, i) => i % 6 * game_width * 0.12 - game_width * 0.75)
+        .attr("x", (d, i) => i % 6 * game_width * 0.123 - game_width * 0.75)
         .attr("y", (d, i) => {
             if (i < 6) return game_height * 0.65
             else return game_height * 0.65 + game_width * 0.02
@@ -259,17 +283,18 @@ function gameBubbleChart(data) {
     const colorLegendTexts = colorLegend.selectAll("text")
         .data(gameGenre)
         .enter().append("text")
-        .attr("x", (d, i) => i % 6 * game_width * 0.12 - game_width * 0.75 + game_width * 0.02)
+        .attr("x", (d, i) => i % 6 * game_width * 0.122 - game_width * 0.75 + game_width * 0.022)
         .attr("y", (d, i) => {
-            if (i < 6) return game_height * 0.65 +  game_width * 0.012
-            else return game_height * 0.65 +  game_width * 0.031
+            if (i < 6) return game_height * 0.65 + game_width * 0.012
+            else return game_height * 0.65 + game_width * 0.031
         })
         .text(d => d)
+        .style("font-family", "Roboto Mono")
         .attr("fill", "#000")
-        .style("font-size", `${game_width*0.014}px`);
+        .style("font-size", `${game_width * 0.014}px`);
 
     const sizeLegend = g.append("g")
-        .attr("transform", `translate(${game_width * 0.75},${game_height * 0.42})`)
+        .attr("transform", `translate(${game_width * 0.8},${game_height * 0.42})`)
         .attr("id", "SizeLegend");
 
     const sizeLegendCircles = sizeLegend.selectAll("legend-circle")
@@ -280,7 +305,7 @@ function gameBubbleChart(data) {
         .attr("r", d => d)
         .attr("fill", "none")
         .attr("stroke", "#000")
-        .attr("stroke-width",`${1.5}`)
+        .attr("stroke-width", `${1.5}`)
 
     const sizeLegendTexts = sizeLegend.selectAll("text")
         .data([10, 20, 30])
@@ -289,7 +314,8 @@ function gameBubbleChart(data) {
         .attr("y", 0)
         .text(d => d)
         .attr("fill", "#000")
-        .style("font-size", `${game_width*0.014}px`);
+        .style("font-family", "Roboto Mono")
+        .style("font-size", `${game_width * 0.014}px`);
 
     function tick() {
         node.attr('transform', function (d) {
@@ -305,13 +331,17 @@ function gameBubbleChart(data) {
         if (d.data.Name == game) {
             game = null;
             circle.attr("stroke", null);
+            g.selectAll("#game_title")
+                .text("All games")
         }
         else {
             game = d.data.Name;
             circle.attr("stroke", hasStroke ? null : "black")
             circle.attr("stroke-width", 2)
+            g.selectAll("#game_title")
+                .text(game)
+
         }
-        console.log(data);
 
         upGamePie(data);
         upGameBar(data);

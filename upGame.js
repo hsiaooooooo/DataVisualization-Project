@@ -50,15 +50,21 @@ function upGamePie(data) {
 function upGameBar(data) {
     data = processNewData(data);
 
-    var sales = salesCount(data).slice(0, 4);
+    var sales = salesCount(data).slice(0, 5);
+    var color = ['#d8b579', '#d89079', '#5cc4c9', '#4090dc', '#d8b3ca']
+
 
     var bar = [
+        { region: "Global", sales: sales[4] },
         { region: "NA", sales: sales[0] },
         { region: "EU", sales: sales[1] },
         { region: "JP", sales: sales[2] },
-        { region: "Other", sales: sales[3] },
-        // { region: "Global", sales: sales[4] }
+        { region: "Other", sales: sales[3] }
     ]
+    const regions = bar.map(d => d.region);
+    const colorScale = d3.scaleOrdinal()
+        .domain(regions)
+        .range(['#d8b579', '#d89079', '#5cc4c9', '#4090dc', '#d8b3ca']);
 
     bar.sort(function (b, a) {
         return a.sales - b.sales;
@@ -92,12 +98,12 @@ function upGameBar(data) {
     bins.transition()
         .duration(1000)
         // .data(bar)
-        .attr("fill", "steelblue")
         .attr("x", d => x(d.region))
         .attr("y", d => y(d.sales))
         .attr("width", x.bandwidth())
         .attr("height", d => game_bar_config.height * 0.9 - y(d.sales))
-        .attr("fill", "#097ebe");
+        .style("fill", d => colorScale(d.region));
+    // .attr("fill", "steelblue")
 }
 
 
