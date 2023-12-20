@@ -494,7 +494,7 @@ function sec_pie(data) {
         .attr("text-anchor", "middle")
         .attr("font-family", "Century")
         .attr("fill", "#004b62")
-        .attr("transform", 'translate(' + sec_pie_set.width / 35 + ', ' + - sec_pie_set.height * 0.65 + ')')
+        .attr("transform", 'translate(' + sec_pie_set.width / 35 + ', ' + 0  + ')')
         .text("Sales Ratio")
         .style("font-family", "Roboto Mono")
 
