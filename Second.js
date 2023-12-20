@@ -308,7 +308,7 @@ var pub_originalaxis;
 var pub_originalaxisy;
 
 function sec_bar_pub(data) {
-    const group2 = svg2.append('g')
+    const group2 = svg2.append('g').attr("transform", 'translate('+sec_game_width/2+', '+0+')')
 
     var bar_color = ['#d89079', '#5cc4c9', '#4090dc', '#d8b3ca', '#d8b579'];
     //X label
@@ -323,19 +323,19 @@ function sec_bar_pub(data) {
         .range([0, sec_bar_set.width * 2 / 3])
     const bar_xAxisCall = d3.axisBottom(bar_x)
     pub_originalaxis = group2.append("g").call(bar_xAxisCall)
-        .attr("transform", 'translate(' + sec_bar_set.width * 99 / 100 + ', ' + sec_bar_set.height * 2 / 3 + ')')
+        .attr("transform", 'translate(' + 0+ ', ' + (sec_bar_set.height * 2 / 3)+ ')')
     // Y label
     const bar_y = d3.scaleBand()
         .domain(top5Publisher.map(d => d.name))
         .range([sec_bar_set.height * 2 / 3, 0])
     const bar_yAxisCall = d3.axisLeft(bar_y).ticks(10)
     pub_originalaxisy = group2.append("g").call(bar_yAxisCall)
-        .attr("transform", 'translate(' + sec_bar_set.width * 99 / 100 + ', ' + 0 + ')')
+        //.attr("transform", 'translate(' + sec_bar_set.width * 99 / 100 + ', ' + 0 + ')')
 
     pub_bar_rects = group2.append("g").selectAll("rect")
         .data(top5Publisher)
         .enter().append("rect")
-        .attr("x", sec_bar_set.width * 99 / 100)
+        .attr("x", 0)
         .attr("y", d => bar_y(d.name))
         .attr("width", d => bar_x(d.value))
         .attr("height", 30)
