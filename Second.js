@@ -17,7 +17,17 @@ const sec_bar_set = {
 };
 
 const svg2 = d3.select("#chart-area2").append("svg")
-    .attr("width", sec_game_width).attr("height", sec_game_height * 0.9)
+    .attr("width", sec_game_width)
+    .attr("height", sec_game_height * 0.95)
+
+svg2.append("text")
+    .attr("x", game_width / 2)
+    .attr("y", game_height * 0.04)
+    .attr("text-anchor", "middle")
+    .style("font-size", "30px")
+    .style("font-weight", "bold")
+    .style("font-family", "Roboto Mono")
+    .text("Comprehensive Analysis of Game Sales").attr("fill", "#004b62");
 
 document.addEventListener('DOMContentLoaded', function () {
     var startYear = 1980;
@@ -233,7 +243,7 @@ function sec_donut(data, keys) {
     //donut legend
     var donut_legend = group2.selectAll(".legend").data(keys)
         .enter().append("g").attr("class", "legend")
-        .attr("transform", `translate(${0}, ${-sec_donut_set.height * 0.1})`);
+        .attr("transform", `translate(${0}, ${sec_donut_set.height * 0.1})`);
 
     donut_legend.append("rect").attr("x", 0)
         .attr("y", function (d, i) {
@@ -260,7 +270,7 @@ function sec_donut(data, keys) {
         .attr("font-size", "35px")
         .attr("text-anchor", "middle")
         .attr("fill", "#004b62")
-        .attr("transform", `translate(${sec_donut_set.width * 0.09},${sec_donut_set.height * 0.8})`)
+        .attr("transform", `translate(${sec_donut_set.width * 0.09},${sec_donut_set.height * 0.95})`)
         .text("Genre")
         .style("font-family", "Roboto Mono")
 
@@ -277,7 +287,7 @@ function sec_donut(data, keys) {
         .attr("fill", (d, i) => {
             return donut_color[i];
         })
-        .attr("transform", 'translate(' + (sec_donut_set.width / 1.7) + ', ' + (sec_donut_set.height * 1.3) + ')');
+        .attr("transform", 'translate(' + (sec_donut_set.width / 1.7) + ', ' + (sec_donut_set.height * 1.45) + ')');
 
 }
 
@@ -310,7 +320,7 @@ function sec_bar_pub(data) {
     //X label
     group2.append("text")
         .attr("x", sec_bar_set.width / 4)
-        .attr("y", sec_bar_set.height * 0.84)
+        .attr("y", sec_bar_set.height * 0.99)
         .attr("font-size", "22px")
         .style("font-family", "Roboto Mono")
         .text("Global Sales").attr("fill", "#004b62")
@@ -322,7 +332,7 @@ function sec_bar_pub(data) {
     pub_originalaxis = group2.append("g")
         .style("font-size", "18px")
         .call(bar_xAxisCall)
-        .attr("transform", 'translate(' + sec_bar_set.width * 0 + ', ' + (sec_bar_set.height * 2 / 3) + ')')
+        .attr("transform", 'translate(' + sec_bar_set.width * 0 + ', ' + (sec_bar_set.height * 0.85) + ')')
     pub_originalaxis.selectAll("text")
         .attr("transform", "rotate(-40)")
         .style("font-family", "Roboto Mono")
@@ -332,7 +342,11 @@ function sec_bar_pub(data) {
         .domain(top5Publisher.map(d => d.name))
         .range([sec_bar_set.height * 2 / 3, 0])
     const bar_yAxisCall = d3.axisLeft(bar_y).ticks(10)
-    pub_originalaxisy = group2.append("g").call(bar_yAxisCall).style("font-size", `${17}px`)
+    pub_originalaxisy = group2.append("g")
+        .call(bar_yAxisCall)
+        .style("font-size", `${17}px`)
+        .attr("transform", 'translate(' + 0 + ', ' + (sec_bar_set.height / 5.45) + ')')
+
     pub_originalaxisy.selectAll("text")
         .attr("transform", "rotate(-40)")
         .style("font-family", "Roboto Mono")
@@ -346,6 +360,7 @@ function sec_bar_pub(data) {
         .attr("y", d => bar_y(d.name))
         .attr("width", d => bar_x(d.value))
         .attr("height", 30)
+        .attr("transform", `translate(${0},${sec_bar_set.height * 0.22})`)
         .style("fill", function (d, i) {
             return bar_color[i];
         })
@@ -361,7 +376,7 @@ function sec_bar_plat(data) {
     //X labeld89079
     group2.append("text")
         .attr("x", sec_bar_set.width * 1.25)
-        .attr("y", sec_bar_set.height * 0.8)
+        .attr("y", sec_bar_set.height * 0.95)
         .attr("font-size", "22px").attr("fill", "#004b62")
         .style("font-family", "Roboto Mono")
         .text("Global Sales")
@@ -373,7 +388,7 @@ function sec_bar_plat(data) {
     plat_originalaxis = group2.append("g")
         .style("font-size", "17px")
         .call(bar_xAxisCall)
-        .attr("transform", 'translate(' + sec_bar_set.width * 99 / 100 + ', ' + sec_bar_set.height * 2 / 3 + ')')
+        .attr("transform", 'translate(' + sec_bar_set.width * 99 / 100 + ', ' + sec_bar_set.height / 1.2 + ')')
     plat_originalaxis.selectAll("text")
         .attr("transform", "rotate(-40)")
         .style("font-family", "Roboto Mono")
@@ -388,7 +403,7 @@ function sec_bar_plat(data) {
         .style("font-size", "17px")
         .style("font-family", "Roboto Mono")
         .call(bar_yAxisCall)
-        .attr("transform", 'translate(' + sec_bar_set.width * 99 / 100 + ', ' + 0 + ')')
+        .attr("transform", 'translate(' + sec_bar_set.width * 99 / 100 + ', ' + sec_bar_set.height / 6 + ')')
     plat_originalaxisy.selectAll("text")
         .attr("transform", "rotate(-40)")
         .style("text-anchor", "end");
@@ -400,6 +415,7 @@ function sec_bar_plat(data) {
         .attr("y", d => plat_bar_y(d.name))
         .attr("width", d => plat_bar_x(d.value))
         .attr("height", 30)
+        .attr("transform", `translate(${0},${sec_bar_set.height * 0.2})`)
         .style("fill", function (d, i) {
             return bar_color[i];
         })
@@ -456,7 +472,7 @@ function sec_pie(data) {
 
     pie_legend.append("rect").attr("x", 0)
         .attr("y", function (d, i) {
-            return i * 35 + sec_game_height / 5;
+            return i * 35 + sec_game_height / 3;
         })
         .attr("width", 30).attr("height", 10)
         .style("fill", function (d, i) {
@@ -465,7 +481,7 @@ function sec_pie(data) {
 
     pie_legend.append("text").attr("x", 40)
         .attr("y", function (d, i) {
-            return i * 35 + sec_game_height / 5 + 20;
+            return i * 35 + sec_game_height / 3 + 20;
         })
         .style("font-size", `${sec_game_width * 0.02}`)
         .style("font-family", "Roboto Mono")
@@ -474,17 +490,13 @@ function sec_pie(data) {
     group2.append("text")
         .attr("x", sec_pie_set.width / 2)
         .attr("y", sec_pie_set.height - 50)
-        .attr("font-size", "35px")
+        .attr("font-size", "30px")
         .attr("text-anchor", "middle")
         .attr("font-family", "Century")
         .attr("fill", "#004b62")
-        .attr("transform", 'translate(' + sec_pie_set.width / 18 + ', ' + - sec_pie_set.height * 0.15 + ')')
+        .attr("transform", 'translate(' + sec_pie_set.width / 35 + ', ' + - sec_pie_set.height * 0.65 + ')')
         .text("Sales Ratio")
         .style("font-family", "Roboto Mono")
-
-
-    //pie chart
-    //const radius = Math.min(sec_pie_set.width, sec_pie_set.height) / 2;
 
     pie_arcs = pie(SalesCounts);
 
@@ -492,15 +504,15 @@ function sec_pie(data) {
         .data(pie_arcs)
         .join("text")
         .attr("class", "second-pie-label")
-        .attr("id", (d, i) => "label-text-" + i) // Assign a unique ID based on the index
+        .attr("id", (d, i) => "label-text-" + i)
         .attr("transform", function (d) {
             var pos = labelArc.centroid(d);
             var isLeftSide = pos[0] < 0;
             if (isLeftSide) {
-                return `translate(${pos[0] + radius * 3},${pos[1] + 150})`;
+                return `translate(${pos[0] + radius * 3},${pos[1] + sec_pie_set.height / 1.75})`;
             }
             else
-                return `translate(${pos[0] + radius * 3.2}, ${pos[1] + 150})`;
+                return `translate(${pos[0] + radius * 3.2}, ${pos[1] + sec_pie_set.height / 1.75})`;
         })
         .attr("dy", "0.35em")
         .attr("font-size", "20px")
@@ -512,7 +524,7 @@ function sec_pie(data) {
         .attr("fill", (d, i) => {
             return pie_color[i];
         })
-        .attr("transform", 'translate(' + (sec_pie_set.width / 3 + 100) + ', 150)')
+        .attr("transform", 'translate(' + (sec_pie_set.width / 3+100) + ', ' + (sec_pie_set.height / 1.75) + ')')
         .on("mouseenter", function (event, d) {
             d3.select(this)
                 .attr("stroke", "white")
@@ -558,10 +570,10 @@ function updatePie(SalesCounts) {
             var pos = labelArc.centroid(d);
             var isLeftSide = pos[0] < 0;
             if (isLeftSide) {
-                return `translate(${pos[0] + radius * 3},${pos[1] + 150})`;
+                return `translate(${pos[0] + radius * 3},${pos[1] + sec_pie_set.height / 2})`;
             }
             else
-                return `translate(${pos[0] + radius * 3.2}, ${pos[1] + 150})`;
+                return `translate(${pos[0] + radius * 3.2}, ${pos[1] + sec_pie_set.height / 2})`;
         })
         .text(d => `${(d.data / d3.sum(SalesCounts) * 100).toFixed(1)}%`)
 }
