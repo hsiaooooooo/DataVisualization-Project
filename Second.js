@@ -1,4 +1,3 @@
-
 const sec_parentContainer = d3.select("#chart-area2");
 
 const sec_game_width = sec_parentContainer.node().getBoundingClientRect().width;
@@ -234,7 +233,7 @@ function sec_donut(data, keys) {
     //donut legend
     var donut_legend = group2.selectAll(".legend").data(keys)
         .enter().append("g").attr("class", "legend")
-    //.attr("transform", 'translate(50, 30)');
+    .attr("transform", `translate(${0}, ${-sec_donut_set.height*0.1})`);
 
     donut_legend.append("rect").attr("x", 0)
         .attr("y", function (d, i) {
@@ -261,7 +260,7 @@ function sec_donut(data, keys) {
         .attr("text-anchor", "middle")
         .attr("font-family", "Century")
         .attr("fill", "#004b62")
-        .attr("transform", 'translate(' + (sec_donut_set.width / 40) + ', ' + (sec_donut_set.height + 30) + ')')
+        .attr("transform", `translate(${sec_donut_set.width * 0.001},${sec_donut_set.height * 0.7})`)
         .text("Genre")
 
     //pie chart
@@ -277,7 +276,7 @@ function sec_donut(data, keys) {
         .attr("fill", (d, i) => {
             return donut_color[i];
         })
-        .attr("transform", 'translate(' + (sec_donut_set.width / 3 + 100) + ', ' + (sec_donut_set.height + 150) + ')');
+        .attr("transform", 'translate(' + (sec_donut_set.width  / 2 ) + ', ' + (sec_donut_set.height*1.2) + ')');
 
 }
 
@@ -304,7 +303,7 @@ var pub_originalaxis;
 var pub_originalaxisy;
 
 function sec_bar_pub(data) {
-    const group2 = svg2.append('g').attr("transform", 'translate('+sec_game_width/2+', '+0+')')
+    const group2 = svg2.append('g').attr("transform", 'translate(' + sec_game_width / 2 + ', ' + 0 + ')')
 
     var bar_color = ['#d89079', '#5cc4c9', '#4090dc', '#d8b3ca', '#d8b579'];
     //X label
@@ -319,14 +318,14 @@ function sec_bar_pub(data) {
         .range([0, sec_bar_set.width * 2 / 3])
     const bar_xAxisCall = d3.axisBottom(bar_x)
     pub_originalaxis = group2.append("g").call(bar_xAxisCall)
-        .attr("transform", 'translate(' + 0+ ', ' + (sec_bar_set.height * 2 / 3)+ ')')
+        .attr("transform", 'translate(' + 0 + ', ' + (sec_bar_set.height * 2 / 3) + ')')
     // Y label
     const bar_y = d3.scaleBand()
         .domain(top5Publisher.map(d => d.name))
         .range([sec_bar_set.height * 2 / 3, 0])
     const bar_yAxisCall = d3.axisLeft(bar_y).ticks(10)
     pub_originalaxisy = group2.append("g").call(bar_yAxisCall)
-        //.attr("transform", 'translate(' + sec_bar_set.width * 99 / 100 + ', ' + 0 + ')')
+    //.attr("transform", 'translate(' + sec_bar_set.width * 99 / 100 + ', ' + 0 + ')')
 
     pub_bar_rects = group2.append("g").selectAll("rect")
         .data(top5Publisher)
@@ -427,7 +426,7 @@ function sec_pie(data) {
 
     pie_legend.append("rect").attr("x", 0)
         .attr("y", function (d, i) {
-            return i * 35 + sec_game_height/5;
+            return i * 35 + sec_game_height / 5;
         })
         .attr("width", 30).attr("height", 30)
         .style("fill", function (d, i) {
@@ -436,9 +435,9 @@ function sec_pie(data) {
 
     pie_legend.append("text").attr("x", 40)
         .attr("y", function (d, i) {
-            return i * 35 + sec_game_height/5 + 20;
+            return i * 35 + sec_game_height / 5 + 20;
         })
-        .style("font-size", `${sec_game_width*0.02}`)
+        .style("font-size", `${sec_game_width * 0.02}`)
         .style("text-anchor", "start").attr("fill", "#004b62").text((d) => d)
 
     group2.append("text")
@@ -448,7 +447,7 @@ function sec_pie(data) {
         .attr("text-anchor", "middle")
         .attr("font-family", "Century")
         .attr("fill", "#004b62")
-        .attr("transform", 'translate(' + sec_pie_set.width / 12 + ', ' + (-10) + ')')
+        .attr("transform", 'translate(' + sec_pie_set.width / 18 + ', ' + - sec_pie_set.height * 0.25 + ')')
         .text("Sales Ratio")
 
     //pie chart

@@ -3,8 +3,7 @@ const line={
     height:800
 };
 const svg3=d3.select("#second-row-container").append("svg")
-            .attr("width", line.width).attr("height", line.height);
-
+            .attr("width", line.width * 1.5).attr("height", line.height* 1.3)
 
 
 var EUdata = new Array(37).fill(0);
@@ -47,10 +46,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 selectGenre=selectedYear;//console.log(selectGenre);
                 processLineUpdate(data, selectGenre);console.log(NAdata)
                 updateline(NAdata, EUdata, JPdata, Otherdata, Globaldata)
-                
-
-
-                
+                  
             })
         });
             
@@ -61,7 +57,6 @@ document.addEventListener('DOMContentLoaded', function () {
     dropdown.style.maxHeight = maxDropdownHeight + 'px';
     dropdown.style.overflowY = 'auto';
     
-    
 });
 
 
@@ -69,7 +64,7 @@ d3.csv("vgsales.csv").then(data =>{
     preprocess(data);//console.log(data)
     processLine(data);//console.log(Globaldata)
     
-    const group3=svg3.append('g').attr("transform", 'translate('+100+', '+(-30)+')')
+    const group3=svg3.append('g').attr("transform", 'translate('+line.width*0.1+', '+ line.height*0.1 +')')
     //x
     group3.append("text")
                 .attr("x", line.width/2 )
@@ -77,9 +72,9 @@ d3.csv("vgsales.csv").then(data =>{
                 .attr("font-size", "50px").attr("fill", "#004b62")
                 .text("Year").attr("transform", 'translate('+0+', '+(30)+')')
 
-    // var line_x = d3.scaleLinear()
-    //             .domain([1980, 2016])
-    //             .range([0, line.width-80])
+    var line_x = d3.scaleLinear()
+                .domain([1980, 2016])
+                .range([0, line.width + 50])
     const line_xAxisCall = d3.axisBottom(line_x).ticks(37)
     plat_originalaxis=group3.append("g").call(line_xAxisCall)
                 .attr("transform", 'translate('+0+', '+(line.height-80)+')')
@@ -111,7 +106,6 @@ d3.csv("vgsales.csv").then(data =>{
         .attr('d', linee)
         .attr('fill', 'none')
         .attr('stroke', color[0]).attr('stroke-width', 5)
-        //.attr("transform", 'translate('+100+', '+(-100)+')')
 
     euline=group3.append('path')
         .data([EUdata])
