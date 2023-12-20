@@ -20,9 +20,12 @@ var globalline;
 var selectGenre;
 
 var line_x = d3.scaleLinear()
+                .domain([1980, 2016])
+                .range([0, line.width + 50])
+var line_x = d3.scaleLinear()
         .domain([1980, 2016])
         .range([0, line.width-80])
-var originalaxis;
+var line_originalaxis;
 
 document.addEventListener('DOMContentLoaded', function () {
     var startYear = 0;
@@ -73,11 +76,9 @@ d3.csv("vgsales.csv").then(data =>{
     .style("font-family", "Roboto Mono")
     .text("Year").attr("transform", 'translate('+0+', '+(30)+')')
 
-    var line_x = d3.scaleLinear()
-                .domain([1980, 2016])
-                .range([0, line.width + 50])
+    
     const line_xAxisCall = d3.axisBottom(line_x).ticks(37)
-    plat_originalaxis=group3.append("g").call(line_xAxisCall)
+    group3.append("g").call(line_xAxisCall)
                 .attr("transform", 'translate('+0+', '+(line.height-80)+')')
     //y
     group3.append("text")
@@ -92,7 +93,7 @@ d3.csv("vgsales.csv").then(data =>{
                      .domain([0, d3.max(Globaldata, d=>d)])
                      .range([line.height-80, 0])
     const line_yAxisCall = d3.axisLeft(line_y).ticks(10)
-    originalaxis=group3.append("g").call(line_yAxisCall)//.attr("transform", 'translate('+100+', '+(0)+')')
+    line_originalaxis=group3.append("g").call(line_yAxisCall)//.attr("transform", 'translate('+100+', '+(0)+')')
     
     var color=['#d89079', '#5cc4c9', '#4090dc', '#d8b3ca', '#d8b579']
 
@@ -143,7 +144,7 @@ function updateline(NAdata, EUdata, JPdata, Otherdata, Globaldata)
                      .range([line.height-80, 0])
     const line_yAxisCall = d3.axisLeft(newline_y).ticks(10)
     //originalaxis=group3.append("g").call(line_yAxisCall)//.attr("transform", 'translate('+100+', '+(0)+')')
-    originalaxis.transition().duration(1000).call(line_yAxisCall)
+    line_originalaxis.transition().duration(1000).call(line_yAxisCall)
 
     //console.log(NAdata)
 
